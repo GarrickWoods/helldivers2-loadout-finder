@@ -38,7 +38,6 @@ async function load(){
   factionSel.value=F; difficultySel.value=D; objectiveSel.value=O;
   render();
 
-  // Disable the roll button until items are ready
   const rollBtn = $("#rollBtn");
   if (rollBtn) rollBtn.disabled = true;
 
@@ -46,16 +45,6 @@ async function load(){
     const res=await fetch('items.json?cb='+Date.now());
     if(!res.ok) throw new Error('Failed to load items.json: '+res.status);
     ITEMS=await res.json();
-
-    // Basic shape validation
-    const req = ["factions","difficulties","armor_weights","primaries","sidearms","explosives","boosters","stratagems"];
-    for (const k of req){
-      if (!(k in ITEMS)) throw new Error(`items.json missing "${k}" array/object`);
-    }
-    if (!ITEMS.stratagems || !Array.isArray(ITEMS.stratagems.turrets) || 
-        !Array.isArray(ITEMS.stratagems.bombardment) || !Array.isArray(ITEMS.stratagems.deployables)){
-      throw new Error("items.json stratagems must include turrets, bombardment, and deployables arrays");
-    }
 
     optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
     optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
@@ -131,45 +120,26 @@ document.addEventListener('click', (e)=>{
 // ---------- Challenge ----------
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-/** ensure a pool exists & has at least N elements (for alternates) */
-function assertPool(name, pool, need=1){
-  if (!Array.isArray(pool) || pool.length < need){
-    throw new Error(`Challenge generator: "${name}" pool is missing or too small (need ${need}, have ${Array.isArray(pool)?pool.length:0})`);
-  }
-}
-
-/** Pick 1 main + N alternates (shuffled) */
 function pickOrdered(pool, altCount=2){
-  assertPool('pool', pool, altCount+1);
   const s = [...pool].sort(()=>Math.random() - 0.5);
   return { main: s[0] || '', alts: s.slice(1, 1 + altCount) };
 }
 
 function genPlayerBuild(){
-  // Validate required pools once (throws if invalid)
-  assertPool('primaries',   ITEMS.primaries,   3);
-  assertPool('sidearms',    ITEMS.sidearms,    3);
-  assertPool('explosives',  ITEMS.explosives,  3);
-  assertPool('armor_weights', ITEMS.armor_weights, 1);
-  assertPool('boosters',    ITEMS.boosters,    2);
-
   const primary   = pickOrdered(ITEMS.primaries, 2);
   const sidearm   = pickOrdered(ITEMS.sidearms, 2);
   const explosive = pickOrdered(ITEMS.explosives, 2);
   const armor     = rand(ITEMS.armor_weights);
-  const booster   = pickOrdered(ITEMS.boosters, 1); // 1 alternate
+  const booster   = pickOrdered(ITEMS.boosters, 2); // now 2 alternates
 
-  // stratagems: 4 required + 2 alternates
   const allStrats = [
     ...(ITEMS.stratagems.turrets || []),
     ...(ITEMS.stratagems.bombardment || []),
     ...(ITEMS.stratagems.deployables || [])
-  ];
-  assertPool('stratagems', allStrats, 6); // 4 main + 2 alts
+  ].sort(() => Math.random() - 0.5);
 
-  const shuffled = allStrats.sort(() => Math.random() - 0.5);
-  const stratMain = shuffled.slice(0, 4);
-  const stratAlt  = shuffled.slice(4, 6);
+  const stratMain = allStrats.slice(0, 4);
+  const stratAlt  = allStrats.slice(4, 6);
 
   return { primary, sidearm, explosive, armor, booster, stratMain, stratAlt };
 }
@@ -178,9 +148,10 @@ function orderedBlock(title, picks){
   const main = escapeHtml((picks.main||'').toString());
   const alts = (picks.alts||[]).map(x=>escapeHtml(x));
   const label = alts.length === 1 ? 'Alternate' : 'Alternates';
+  // display alternates on separate lines
   return `<div class="kv"><b>${title}</b>
     <div>${main}</div>
-    <div class="small"><b>${label}:</b> ${alts.join(', ') || '-'}</div>
+    <div class="small"><b>${label}:</b><br>${alts.join('<br>') || '-'}</div>
   </div>`;
 }
 
