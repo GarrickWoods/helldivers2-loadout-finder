@@ -146,8 +146,11 @@ function challengeCard(idx,b){
     ${orderedBlock('Explosive', b.explosive)}
     <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
     <div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div>
-    <div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain||[]).join(', '))}</div>
-      <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt||[]).join(', ') || '-')}</div>
+    <div class="kv"><b>Stratagems (4 required)</b>
+      <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
+        <div class="small"><b>Alternates:</b><br>${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
+      </div>
+          <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt||[]).join(', ') || '-')}</div>
     </div>
   </article>`;
 }
