@@ -147,10 +147,6 @@ function orderedBlock(title, picks){
     <div>${main}</div>
     <div class="small"><b>Alternates:</b> ${alts}</div>
   </div>`;
-}</b>
-    <div><b>1–3:</b> ${escapeHtml((picks.main||[]).join(', '))}</div>
-    <div class="small"><b>4–6 (alternates):</b> ${escapeHtml((picks.alts||[]).join(', ') || '-') }</div>
-  </div>`;
 }
 
 function challengeCard(idx,b){
@@ -159,11 +155,9 @@ function challengeCard(idx,b){
     ${orderedBlock('Primary Weapons', b.primary)}
     ${orderedBlock('Sidearms', b.sidearm)}
     ${orderedBlock('Explosives', b.explosive)}
-    <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
-    <div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div>
-    <div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain||[]).join(', '))}</div>
-      <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt||[]).join(', ') || '-')}</div>
-    </div>
+    <><div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div><div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div><div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain || []).join(', '))}</div>
+  <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt || []).join(', ') || '-')}</div>
+</div></>
   </article>`;
 }
 
