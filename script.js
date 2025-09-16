@@ -11,6 +11,8 @@ const keyMap={
   note:"Recommended_Team_Composition_Notes",
   class:["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
   weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons","C6_Primary_Weapons"],
+  sidearms:["C1_Sidearm","C2_Sidearm","C3_Sidearm","C4_Sidearm","C5_Sidearm","C6_Sidearm"],
+  explosives:["C1_Explosive","C2_Explosive","C3_Explosive","C4_Explosive","C5_Explosive","C6_Explosive"],
   armor:["C1_Armor_boosters","C2_Armor_boosters","C3_Armor_boosters","C4_Armor_boosters","C5_Armor_boosters","C6_Armor_boosters"],
   strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems","C6_Stratagems"],
 };
@@ -77,17 +79,28 @@ function render(){
   compNote.textContent = row[keyMap.note] || '';
   const cards=[];
   for(let i=0;i<6;i++){
-    cards.push(card(row[keyMap.class[i]], row[keyMap.weapons[i]], row[keyMap.armor[i]], row[keyMap.strats[i]]));
+    cards.push(card(
+      row[keyMap.class[i]],
+      row[keyMap.weapons[i]],
+      row[keyMap.sidearms[i]],
+      row[keyMap.explosives[i]],
+      row[keyMap.armor[i]],
+      row[keyMap.strats[i]]
+    ));
   }
   results.innerHTML = cards.join('');
 }
 
-function card(role,weapons,armor,strats){
+function card(role,primary,sidearm,explosive,armor,strats){
+  const row = (label, val) => !val ? '' :
+    `<div class="kv"><b>${label}</b><div>${escapeHtml(val)}</div></div>`;
   return `<article class="card">
     <div class="role">${escapeHtml(role||"Role")}</div>
-    <div class="kv"><b>Primary Weapons</b><div>${escapeHtml(weapons||"-")}</div></div>
-    <div class="kv"><b>Armor / Boosters</b><div>${escapeHtml(armor||"-")}</div></div>
-    <div class="kv"><b>Stratagems</b><div>${escapeHtml(strats||"-")}</div></div>
+    ${row('Primary', primary)}
+    ${row('Sidearm', sidearm)}
+    ${row('Explosive', explosive)}
+    ${row('Armor / Boosters', armor)}
+    ${row('Stratagems', strats)}
   </article>`;
 }
 
@@ -97,7 +110,12 @@ function copyText(){
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
   for(let i=0;i<6;i++){
-    out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Boosters: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
+    out += `• ${row[keyMap.class[i]]}
+   - Primary: ${row[keyMap.weapons[i]] || '-'}
+   - Sidearm: ${row[keyMap.sidearms[i]] || '-'}
+   - Explosive: ${row[keyMap.explosives[i]] || '-'}
+   - Armor/Boosters: ${row[keyMap.armor[i]] || '-'}
+   - Stratagems: ${row[keyMap.strats[i]] || '-'}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
 }
@@ -130,7 +148,7 @@ function genPlayerBuild(){
   const sidearm   = pickOrdered(ITEMS.sidearms, 2);
   const explosive = pickOrdered(ITEMS.explosives, 2);
   const armor     = rand(ITEMS.armor_weights);
-  const booster   = pickOrdered(ITEMS.boosters, 2); // now 2 alternates
+  const booster   = pickOrdered(ITEMS.boosters, 2); // boosters instead of perks
 
   const allStrats = [
     ...(ITEMS.stratagems.turrets || []),
@@ -148,7 +166,6 @@ function orderedBlock(title, picks){
   const main = escapeHtml((picks.main||'').toString());
   const alts = (picks.alts||[]).map(x=>escapeHtml(x));
   const label = alts.length === 1 ? 'Alternate' : 'Alternates';
-  // display alternates on separate lines
   return `<div class="kv"><b>${title}</b>
     <div>${main}</div>
     <div class="small"><b>${label}:</b><br>${alts.join('<br>') || '-'}</div>
