@@ -134,13 +134,17 @@ function genPlayerBuild(){
 }
 function orderedBlock(title, picks){
   const main = escapeHtml((picks.main||'').toString());
-  const alts = (picks.alts||[]).map(x=>escapeHtml(x)).join(', ') || '-';
+  const alts = (picks.alts||[]).map(x=>escapeHtml(x));
+  const label = alts.length === 1 ? 'Alternate' : 'Alternates';
   return `<div class="kv"><b>${title}</b>
     <div>${main}</div>
-    <div class="small"><b>Alternates:</b> ${alts}</div>
+    <div class="small"><b>${label}:</b> ${alts.join(', ') || '-'}</div>
   </div>`;
 }
 function challengeCard(idx,b){
+  // helper for pluralization
+  const altLabel = (arr) => arr.length === 1 ? 'Alternate' : 'Alternates';
+
   return `<article class="card">
     <div class="role">Player ${idx}</div>
     ${orderedBlock('Primary', b.primary)}
@@ -150,7 +154,8 @@ function challengeCard(idx,b){
     ${orderedBlock('Perk', b.perk)}
     <div class="kv"><b>Stratagems (4 required)</b>
       <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
-      <div class="small"><b>Alternates:</b><br>${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
+      <div class="small"><b>${altLabel(b.stratAlt || [])}:</b><br>
+        ${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
     </div>
   </article>`;
 }
