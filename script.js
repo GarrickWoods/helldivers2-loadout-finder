@@ -11,10 +11,10 @@ const keyMap={
   difficulty:"Difficulty",
   objective:"Objective",
   note:"Recommended_Team_Composition_Notes",
-  class:["Class_1","Class_2","Class_3","Class_4","Class_5"],
-  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons"],
-  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks"],
-  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems"],
+  class:["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
+  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons","C6_Primary_Weapons"],
+  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks","C6_Armor_Perks"],
+  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems","C6_Stratagems"],
 };
 
 async function load(){
@@ -53,7 +53,7 @@ function render(){
   if(!row){ results.innerHTML='<p>No data found.</p>'; compNote.textContent=''; return; }
   compNote.textContent = row[keyMap.note] || '';
   const cards=[];
-  for(let i=0;i<5;i++){
+  for(let i=0;i<6;i++){
     cards.push(card(row[keyMap.class[i]], row[keyMap.weapons[i]], row[keyMap.armor[i]], row[keyMap.strats[i]]));
   }
   results.innerHTML = cards.join('');
@@ -74,7 +74,7 @@ function copyText(){
   const row=findRow(f,d,o);
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
-  for(let i=0;i<5;i++){
+  for(let i=0;i<6;i++){
     out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Perks: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
