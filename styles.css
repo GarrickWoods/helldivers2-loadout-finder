@@ -18,3 +18,14 @@ select:focus{border-color:#5aa0ff;box-shadow:0 0 0 2px rgba(90,160,255,.2)}
 .kv div{font-size:.95rem;line-height:1.35}
 .footer{opacity:.6;font-size:.85rem;margin-bottom:2rem}
 @media (max-width:640px){.controls{grid-template-columns:1fr 1fr;}.inline-btns{grid-column:1/-1}}
+/* Tabs */
+.tabs{display:flex;gap:.5rem;margin-bottom:.6rem}
+.tab{padding:.4rem .7rem;border:1px solid #2a3645;background:#0f151d;color:#e5edf5;border-radius:.6rem;cursor:pointer}
+.tab.active{border-color:#5aa0ff;background:#121a23}
+.hidden{display:none}
+.challenge-controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.75rem;align-items:end;margin-top:.5rem}
+.hint{opacity:.6;font-size:.8rem;margin-top:.35rem}
+.small{opacity:.8;font-size:.85rem}
+.alt-list{margin:.25rem 0 0 0;padding-left:1rem}
+.alt-list li{margin:.1rem 0;font-size:.9rem;opacity:.9}
+.card .muted{opacity:.7,font-size:.85rem}

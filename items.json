@@ -1,0 +1,108 @@
+{
+  "factions": [
+    "Terminids (Bugs)",
+    "Automatons (Bots)",
+    "Illuminate"
+  ],
+  "difficulties": [
+    "Trivial",
+    "Easy",
+    "Medium",
+    "Challenging",
+    "Hard",
+    "Extreme",
+    "Suicide Mission",
+    "Impossible",
+    "Helldive",
+    "Super Helldive"
+  ],
+  "armor_weights": [
+    "Light",
+    "Medium",
+    "Heavy"
+  ],
+  "perks": [
+    "Ammo Pack",
+    "Explosive Resist",
+    "Fire Resist",
+    "Revive Speed",
+    "Stamina Boost",
+    "Jump Pack",
+    "Shield Backpack",
+    "Engineering Kit",
+    "Vehicle Mastery",
+    "Scout (UAV Booster)",
+    "Fortified",
+    "Demolitionist"
+  ],
+  "primaries": [
+    "AR-23 Liberator",
+    "AR-23P Liberator Penetrator",
+    "AR-23C Liberator Concussive",
+    "AR-2 Coyote",
+    "AR-61 Tenderizer",
+    "R-63 Diligence",
+    "R-63CS Diligence Counter Sniper",
+    "JAR-5 Dominator",
+    "VG-70 Variable",
+    "LAS-17 Double-Edge Sickle",
+    "ARC-12 Blitzer",
+    "PLAS-1 Scorcher",
+    "PLAS-39 Accelerator Rifle",
+    "PLAS-101 Purifier",
+    "R-36 Eruptor",
+    "CB-9 Explosive Crossbow",
+    "SG-225 Breaker",
+    "SG-225IE Breaker Incendiary",
+    "SG-8 Punisher Plasma",
+    "SG-20 Halt",
+    "SG-451 Cookout",
+    "Autocannon (Support)",
+    "Quasar Cannon (Support)"
+  ],
+  "sidearms": [
+    "P-2 Peacemaker",
+    "M6C/SOCOM (Warbond)",
+    "MP-98 Knight",
+    "GP-31 Grenade Pistol",
+    "LAS-5 Scythe Pistol"
+  ],
+  "explosives": [
+    "Frag Grenade",
+    "Incendiary Grenade",
+    "Impact Grenade",
+    "Gas Grenade",
+    "Sticky Bomb",
+    "Thermite"
+  ],
+  "stratagems": {
+    "turrets": [
+      "MG Sentry",
+      "Autocannon Sentry",
+      "Rocket Sentry",
+      "Tesla/Static Field Emitter",
+      "TD-110 Bastion"
+    ],
+    "bombardment": [
+      "Eagle Airstrike",
+      "Eagle 500kg Bomb",
+      "Orbital Precision Strike",
+      "Orbital Airburst",
+      "Orbital Laser",
+      "Railcannon Strike",
+      "NUX-223 Hellbomb"
+    ],
+    "deployables": [
+      "Ammo Drop",
+      "Shield Generator Relay",
+      "Resupply Pack",
+      "AT Mines",
+      "Proximity Mines",
+      "Barrier/Shield Wall",
+      "Exosuit Drop",
+      "APC Drop",
+      "Recoilless Rifle",
+      "EAT-17 Launcher"
+    ]
+  }
+}

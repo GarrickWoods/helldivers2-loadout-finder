@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Helldivers 2 Loadout Finder</title>
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Filter Helldivers 2 loadouts by faction, difficulty, and objective. Shows five recommended roles with weapons, armor/perks, and stratagems.">
+  <meta name="description" content="Filter Helldivers 2 loadouts by faction, difficulty, and objective. Shows five recommended roles with weapons, armor/perks, and stratagems. Includes a Squad Challenge generator.">
 </head>
 <body>
   <header class="container">
+    <nav class="tabs">
+      <button class="tab active" data-tab="finder">Loadout Finder</button>
+      <button class="tab" data-tab="challenge">Squad Challenge</button>
+    </nav>
     <h1>Helldivers 2 Loadout Finder</h1>
     <p class="sub">Choose <strong>Faction</strong>, <strong>Difficulty</strong>, and <strong>Objective</strong> to get a 5‑class squad with full loadouts.</p>
   </header>
@@ -38,8 +42,34 @@
 
   <section class="container results" id="results"></section>
 
+  <section class="container challenge hidden" id="challenge">
+    <div class="challenge-controls">
+      <div class="control">
+        <label for="players">Players</label>
+        <select id="players"><option>1</option><option>2</option><option>3</option><option selected>4</option></select>
+      </div>
+      <div class="control">
+        <label>Difficulty</label>
+        <select id="challengeDifficulty"></select>
+        <div class="hint">If locked in‑game, use the <em>closest unlocked difficulty</em>.</div>
+      </div>
+      <div class="control">
+        <label>Faction</label>
+        <select id="challengeFaction"></select>
+      </div>
+      <div class="control inline-btns">
+        <button id="rollBtn">🎲 Generate Squad</button>
+        <button id="copyChallenge">Copy</button>
+      </div>
+    </div>
+    <div class="container">
+      <p class="sub">Each player gets a random build. Faction & difficulty apply to everyone. Weapons show ordered picks (1–3 mains, 4–6 backups) for unlock progression.</p>
+    </div>
+    <section class="container results" id="challengeResults"></section>
+  </section>
+
   <footer class="container footer">
-    <p>Built for MouthbreatherTV · Static site, no tracking · Data last updated when exported from Google Sheets.</p>
+    <p>Built for MouthbreatherTV · Static site, no tracking · Update <code>data.json</code> and <code>items.json</code> to maintain.</p>
   </footer>
 
   <script src="script.js"></script>
