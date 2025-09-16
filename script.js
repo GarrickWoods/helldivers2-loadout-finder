@@ -100,8 +100,8 @@ let ITEMS={};
 async function loadItems(){
   const res=await fetch('items.json');
   ITEMS=await res.json();
-  optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
-  optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
+  optionize($("#challengeFaction"), ITEMS.factions);
+  optionize($("#challengeDifficulty"), ITEMS.difficulties);
 }
 
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
@@ -126,18 +126,16 @@ function genPlayerBuild(){
 
 function renderChallenge(){
   const n = parseInt($("#players").value,10);
-  let fSel = $("#challengeFaction").value;
-  let dSel = $("#challengeDifficulty").value;
-  if(fSel==='Random'){ fSel = rand(ITEMS.factions); }
-  if(dSel==='Random'){ dSel = rand(ITEMS.difficulties); }
-  $("#challengeHeader").textContent = `${escapeHtml(fSel)} • ${escapeHtml(dSel)}`;
+  const f = $("#challengeFaction").value;
+  const d = $("#challengeDifficulty").value;
   const out = [];
   for(let p=1;p<=n;p++){
     const b = genPlayerBuild();
     out.push(challengeCard(p,b));
   }
-  $("#challengeResults").innerHTML = out.join('');
+  $("#challengeResults").innerHTML = `<div class="card muted">Faction: <b>${escapeHtml(f)}</b> · Difficulty: <b>${escapeHtml(d)}</b> <span class="small">(or closest unlocked)</span></div>` + out.join('');
 }
+
 function orderedBlock(title, picks){
   return `<div class="kv"><b>${title}</b>
     <div><b>1–3:</b> ${escapeHtml((picks.main||[]).join(', '))}</div>
@@ -161,6 +159,22 @@ function challengeCard(idx,b){
 
 document.addEventListener('click', (e)=>{
   if(e.target && e.target.id==='rollBtn'){ renderChallenge(); }
-  });
+  if(e.target && e.target.id==='copyChallenge'){
+    const n = parseInt($("#players").value,10);
+    const f = $("#challengeFaction").value;
+    const d = $("#challengeDifficulty").value;
+    let txt = `Faction: ${f} | Difficulty: ${d} (or closest unlocked)\n\n`;
+    for(let p=1;p<=n;p++){
+      const b = genPlayerBuild();
+      txt += `Player ${p}\n`;
+      txt += `  Primary 1–3: ${(b.primary.main||[]).join(', ')}\n  Primary 4–6: ${(b.primary.alts||[]).join(', ') || '-'}\n`;
+      txt += `  Sidearm 1–3: ${(b.sidearm.main||[]).join(', ')}\n  Sidearm 4–6: ${(b.sidearm.alts||[]).join(', ') || '-'}\n`;
+      txt += `  Explosive 1–3: ${(b.explosive.main||[]).join(', ')}\n  Explosive 4–6: ${(b.explosive.alts||[]).join(', ') || '-'}\n`;
+      txt += `  Armor: ${b.armor}\n  Perk: ${b.perk}\n`;
+      txt += `  Stratagems(4): ${(b.stratMain||[]).join(', ')}\n  Alternates: ${(b.stratAlt||[]).join(', ') || '-'}\n\n`;
+    }
+    navigator.clipboard.writeText(txt).then(()=>alert('Challenge copied!'));
+  }
+});
 
 load();
