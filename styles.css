@@ -26,7 +26,6 @@ select:focus{border-color:#5aa0ff;box-shadow:0 0 0 2px rgba(90,160,255,.2)}
 .challenge-controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.75rem;align-items:end;margin-top:.5rem}
 .challenge-header{margin:.5rem 0 0; font-size:1.15rem; font-weight:700; opacity:.95}
 .errorbox{border:1px solid #5a2a2a;background:#1a0f10;color:#ffb3b3;padding:1rem;border-radius:.6rem}
-/* put this at the very bottom of styles.css */
 a,
 a:link,
 a:visited {
@@ -34,7 +33,6 @@ a:visited {
     /* white-ish */
     text-decoration: none;
 }
-
 a:hover,
 a:focus {
     color: #5aa0ff;
