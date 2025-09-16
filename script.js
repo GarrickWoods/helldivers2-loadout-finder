@@ -9,7 +9,7 @@ const keyMap={
   note:"Recommended_Team_Composition_Notes",
   class:["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
   weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons","C6_Primary_Weapons"],
-  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks","C6_Armor_Perks"],
+  armor:["C1_Armor_boosters","C2_Armor_boosters","C3_Armor_boosters","C4_Armor_boosters","C5_Armor_boosters","C6_Armor_boosters"],
   strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems","C6_Stratagems"],
 };
 
@@ -77,7 +77,7 @@ function card(role,weapons,armor,strats){
   return `<article class="card">
     <div class="role">${escapeHtml(role||"Role")}</div>
     <div class="kv"><b>Primary Weapons</b><div>${escapeHtml(weapons||"-")}</div></div>
-    <div class="kv"><b>Armor / Perks</b><div>${escapeHtml(armor||"-")}</div></div>
+    <div class="kv"><b>Armor / boosters</b><div>${escapeHtml(armor||"-")}</div></div>
     <div class="kv"><b>Stratagems</b><div>${escapeHtml(strats||"-")}</div></div>
   </article>`;
 }
@@ -88,7 +88,7 @@ function copyText(){
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
   for(let i=0;i<6;i++){
-    out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Perks: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
+    out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/boosters: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
 }
@@ -123,8 +123,8 @@ function genPlayerBuild(){
   const sidearm   = pickOrdered(ITEMS.sidearms, 2);
   const explosive = pickOrdered(ITEMS.explosives, 2);
   const armor     = rand(ITEMS.armor_weights);
-  // 1 alternate for perk
-  const perk      = pickOrdered(ITEMS.perks, 1);
+  // 1 alternate for booster
+  const booster      = pickOrdered(ITEMS.boosters, 1);
 
   // stratagems: 4 required + 2 alternates
   const allStrats = [
@@ -136,7 +136,7 @@ function genPlayerBuild(){
   const stratMain = allStrats.slice(0, 4);
   const stratAlt  = allStrats.slice(4, 6); // now only 2 alternates
 
-  return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
+  return { primary, sidearm, explosive, armor, booster, stratMain, stratAlt };
 }
 
 function orderedBlock(title, picks){
@@ -158,7 +158,7 @@ function challengeCard(idx,b){
     ${orderedBlock('Sidearm', b.sidearm)}
     ${orderedBlock('Explosive', b.explosive)}
     <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
-    ${orderedBlock('Perk', b.perk)}
+    ${orderedBlock('booster', b.booster)}
     <div class="kv"><b>Stratagems (4 required)</b>
       <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
       <div class="small"><b>${altLabel(b.stratAlt || [])}:</b><br>

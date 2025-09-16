@@ -2,7 +2,7 @@
   "factions": [
     "Terminids (Bugs)",
     "Automatons (Bots)",
-    "Illuminate"
+    "Illuminate (Squids)"
   ],
   "difficulties": [
     "Trivial",
@@ -21,19 +21,24 @@
     "Medium",
     "Heavy"
   ],
-  "perks": [
-    "Ammo Pack",
-    "Explosive Resist",
-    "Fire Resist",
-    "Revive Speed",
-    "Stamina Boost",
-    "Jump Pack",
-    "Shield Backpack",
-    "Engineering Kit",
-    "Vehicle Mastery",
-    "Scout (UAV Booster)",
-    "Fortified",
-    "Demolitionist"
+  "boosters": [
+    "Hellpod Space Optimization",
+    "Vitality Enhancement",
+    "UAV Recon Booster",
+    "Stamina Enhancement",
+    "Muscle Enhancement",
+    "Increased Reinforcement Budget",
+    "Flexible Reinforcement Budget",
+    "Localization Confusion Booster",
+    "Expert Extraction Pilot",
+    "Experimental Infusion",
+    "Motivational Shocks",
+    "Sample Extricator",
+    "Sample Scanner",
+    "Firebomb Hellpods",
+    "Dead Sprint",
+    "Armed Resupply Pods",
+    "Stun Pods"
   ],
   "primaries": [
     "AR-2 Coyote",

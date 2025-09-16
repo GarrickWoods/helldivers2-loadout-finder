@@ -16,7 +16,7 @@ Built for the MouthbreatherTV community.
 - Select **Faction**, **Difficulty**, and **Objective**
 - View a **6-class recommended squad** with:
   - Primary Weapons
-  - Armor / Perks
+  - Armor / boosters
   - Stratagems
 - Notes on team composition & scaling with difficulty
 
@@ -29,7 +29,7 @@ Built for the MouthbreatherTV community.
   - Sidearm + 2 alternates
   - Explosive + 2 alternates
   - Armor Weight
-  - Perk
+  - booster
   - 4 required Stratagems + 3 alternates
 - “Closest unlocked difficulty” reminder for progression
 - Items are data-driven so you can easily add new ones
