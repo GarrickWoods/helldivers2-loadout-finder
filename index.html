@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Helldivers 2 Loadout Finder</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Filter Helldivers 2 loadouts by faction, difficulty, and objective. Shows five recommended roles with weapons, armor/perks, and stratagems.">
+</head>
+<body>
+  <header class="container">
+    <h1>Helldivers 2 Loadout Finder</h1>
+    <p class="sub">Choose <strong>Faction</strong>, <strong>Difficulty</strong>, and <strong>Objective</strong> to get a 5‑class squad with full loadouts.</p>
+  </header>
+
+  <section class="container controls">
+    <div class="control">
+      <label for="faction">Faction</label>
+      <select id="faction"></select>
+    </div>
+    <div class="control">
+      <label for="difficulty">Difficulty</label>
+      <select id="difficulty"></select>
+    </div>
+    <div class="control">
+      <label for="objective">Objective</label>
+      <select id="objective"></select>
+    </div>
+    <div class="control inline-btns">
+      <button id="shareBtn" title="Copy a link to this configuration">Share</button>
+      <button id="copyBtn" title="Copy the loadout table as text">Copy</button>
+    </div>
+  </section>
+
+  <section class="container note">
+    <div id="compNote"></div>
+  </section>
+
+  <section class="container results" id="results"></section>
+
+  <footer class="container footer">
+    <p>Built for MouthbreatherTV · Static site, no tracking · Data last updated when exported from Google Sheets.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
