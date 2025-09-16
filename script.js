@@ -1,33 +1,47 @@
-let DATA=[];
+let DATA=[]; let ITEMS={};
 const $=sel=>document.querySelector(sel);
-const factionSel=$("#faction");
-const difficultySel=$("#difficulty");
-const objectiveSel=$("#objective");
-const results=$("#results");
-const compNote=$("#compNote");
+const factionSel=$("#faction"), difficultySel=$("#difficulty"), objectiveSel=$("#objective");
+const results=$("#results"), compNote=$("#compNote");
 
 const keyMap={
-  faction:"Faction",
-  difficulty:"Difficulty",
-  objective:"Objective",
+  faction:"Faction", difficulty:"Difficulty", objective:"Objective",
   note:"Recommended_Team_Composition_Notes",
-  class:["Class_1","Class_2","Class_3","Class_4","Class_5"],
-  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons"],
-  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks"],
-  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems"],
+  class:["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
+  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons","C6_Primary_Weapons"],
+  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks","C6_Armor_Perks"],
+  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems","C6_Stratagems"],
 };
 
+function showError(msg){
+  const box = document.querySelector('.errorbox');
+  document.getElementById('errors').style.display='block';
+  box.textContent = msg;
+  console.error(msg);
+}
+
 async function load(){
-  const res=await fetch('data.json');
-  DATA=await res.json();
+  try{
+    const res=await fetch('data.json?cb='+Date.now());
+    if(!res.ok) throw new Error('Failed to load data.json: '+res.status);
+    DATA=await res.json();
+  }catch(e){ showError(e.message); return; }
+
   initSelectors();
+
   const url=new URL(window.location);
   const F=url.searchParams.get('faction')||DATA[0][keyMap.faction];
   const D=url.searchParams.get('difficulty')||DATA[0][keyMap.difficulty];
   const O=url.searchParams.get('objective')||DATA[0][keyMap.objective];
   factionSel.value=F; difficultySel.value=D; objectiveSel.value=O;
   render();
-  loadItems();
+
+  try{
+    const res=await fetch('items.json?cb='+Date.now());
+    if(!res.ok) throw new Error('Failed to load items.json: '+res.status);
+    ITEMS=await res.json();
+    optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
+    optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
+  }catch(e){ showError(e.message); }
 }
 
 function uniqueBy(field){ return [...new Set(DATA.map(r=>r[field]).filter(Boolean))]; }
@@ -38,11 +52,10 @@ function initSelectors(){
   optionize(difficultySel, uniqueBy(keyMap.difficulty));
   optionize(objectiveSel, uniqueBy(keyMap.objective));
   [factionSel,difficultySel,objectiveSel].forEach(el=>el.addEventListener('change',render));
-  $("#shareBtn").addEventListener('click',shareLink);
+  $("#shareBtn").addEventListener('click',()=>navigator.clipboard.writeText(location.href).then(()=>alert('Shareable link copied!')));
   $("#copyBtn").addEventListener('click',copyText);
 }
 
-// Finder
 function findRow(f,d,o){ return DATA.find(r=>r[keyMap.faction]===f && r[keyMap.difficulty]===d && r[keyMap.objective]===o); }
 
 function render(){
@@ -53,7 +66,7 @@ function render(){
   if(!row){ results.innerHTML='<p>No data found.</p>'; compNote.textContent=''; return; }
   compNote.textContent = row[keyMap.note] || '';
   const cards=[];
-  for(let i=0;i<5;i++){
+  for(let i=0;i<6;i++){
     cards.push(card(row[keyMap.class[i]], row[keyMap.weapons[i]], row[keyMap.armor[i]], row[keyMap.strats[i]]));
   }
   results.innerHTML = cards.join('');
@@ -68,13 +81,12 @@ function card(role,weapons,armor,strats){
   </article>`;
 }
 
-function shareLink(){ navigator.clipboard.writeText(location.href).then(()=>alert('Shareable link copied!')); }
 function copyText(){
   const f=factionSel.value, d=difficultySel.value, o=objectiveSel.value;
   const row=findRow(f,d,o);
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
-  for(let i=0;i<5;i++){
+  for(let i=0;i<6;i++){
     out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Perks: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
@@ -82,7 +94,7 @@ function copyText(){
 
 function escapeHtml(s){ return (s??'').toString().replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-// --- Tabs ---
+// Tabs
 document.addEventListener('click', (e)=>{
   const tab = e.target.closest('.tab');
   if(!tab) return;
@@ -95,22 +107,9 @@ document.addEventListener('click', (e)=>{
   document.querySelector('#results').classList.toggle('hidden', t!=='finder');
 });
 
-// --- Challenge ---
-let ITEMS={};
-async function loadItems(){
-  const res=await fetch('items.json');
-  ITEMS=await res.json();
-  optionize($("#challengeFaction"), ITEMS.factions);
-  optionize($("#challengeDifficulty"), ITEMS.difficulties);
-}
-
+// Challenge
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool, count=6){
-  const shuffled=[...pool].sort(()=>Math.random()-0.5);
-  const picks=shuffled.slice(0, Math.min(count, shuffled.length));
-  return { main:picks.slice(0,3), alts:picks.slice(3,6) };
-}
-
+function pickOrdered(pool){ const s=[...pool].sort(()=>Math.random()-0.5); return { main:s[0]||'', alts:s.slice(1,3) }; }
 function genPlayerBuild(){
   const primary = pickOrdered(ITEMS.primaries);
   const sidearm = pickOrdered(ITEMS.sidearms);
@@ -120,35 +119,23 @@ function genPlayerBuild(){
   const allStrats = [...(ITEMS.stratagems.turrets||[]), ...(ITEMS.stratagems.bombardment||[]), ...(ITEMS.stratagems.deployables||[])];
   const shuffled = allStrats.sort(()=>Math.random()-0.5);
   const stratMain = shuffled.slice(0,4);
-  const stratAlt = shuffled.slice(4,6);
+  const stratAlt = shuffled.slice(4,7);
   return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
 }
-
-function renderChallenge(){
-  const n = parseInt($("#players").value,10);
-  const f = $("#challengeFaction").value;
-  const d = $("#challengeDifficulty").value;
-  const out = [];
-  for(let p=1;p<=n;p++){
-    const b = genPlayerBuild();
-    out.push(challengeCard(p,b));
-  }
-  $("#challengeResults").innerHTML = `<div class="card muted">Faction: <b>${escapeHtml(f)}</b> · Difficulty: <b>${escapeHtml(d)}</b> <span class="small">(or closest unlocked)</span></div>` + out.join('');
-}
-
 function orderedBlock(title, picks){
+  const main = escapeHtml((picks.main||'').toString());
+  const alts = (picks.alts||[]).map(x=>escapeHtml(x)).join(', ') || '-';
   return `<div class="kv"><b>${title}</b>
-    <div><b>1–3:</b> ${escapeHtml((picks.main||[]).join(', '))}</div>
-    <div class="small"><b>4–6 (alternates):</b> ${escapeHtml((picks.alts||[]).join(', ') || '-') }</div>
+    <div>${main}</div>
+    <div class="small"><b>Alternates:</b> ${alts}</div>
   </div>`;
 }
-
 function challengeCard(idx,b){
   return `<article class="card">
     <div class="role">Player ${idx}</div>
-    ${orderedBlock('Primary Weapons', b.primary)}
-    ${orderedBlock('Sidearms', b.sidearm)}
-    ${orderedBlock('Explosives', b.explosive)}
+    ${orderedBlock('Primary', b.primary)}
+    ${orderedBlock('Sidearm', b.sidearm)}
+    ${orderedBlock('Explosive', b.explosive)}
     <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
     <div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div>
     <div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain||[]).join(', '))}</div>
@@ -156,25 +143,17 @@ function challengeCard(idx,b){
     </div>
   </article>`;
 }
-
-document.addEventListener('click', (e)=>{
-  if(e.target && e.target.id==='rollBtn'){ renderChallenge(); }
-  if(e.target && e.target.id==='copyChallenge'){
-    const n = parseInt($("#players").value,10);
-    const f = $("#challengeFaction").value;
-    const d = $("#challengeDifficulty").value;
-    let txt = `Faction: ${f} | Difficulty: ${d} (or closest unlocked)\n\n`;
-    for(let p=1;p<=n;p++){
-      const b = genPlayerBuild();
-      txt += `Player ${p}\n`;
-      txt += `  Primary 1–3: ${(b.primary.main||[]).join(', ')}\n  Primary 4–6: ${(b.primary.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Sidearm 1–3: ${(b.sidearm.main||[]).join(', ')}\n  Sidearm 4–6: ${(b.sidearm.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Explosive 1–3: ${(b.explosive.main||[]).join(', ')}\n  Explosive 4–6: ${(b.explosive.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Armor: ${b.armor}\n  Perk: ${b.perk}\n`;
-      txt += `  Stratagems(4): ${(b.stratMain||[]).join(', ')}\n  Alternates: ${(b.stratAlt||[]).join(', ') || '-'}\n\n`;
-    }
-    navigator.clipboard.writeText(txt).then(()=>alert('Challenge copied!'));
-  }
-});
+document.addEventListener('click', (e)=>{ if(e.target && e.target.id==='rollBtn'){ renderChallenge(); } });
+function renderChallenge(){
+  const n = parseInt($("#players").value,10);
+  let fSel = $("#challengeFaction").value;
+  let dSel = $("#challengeDifficulty").value;
+  if(fSel==='Random'){ fSel = rand(ITEMS.factions); }
+  if(dSel==='Random'){ dSel = rand(ITEMS.difficulties); }
+  $("#challengeHeader").textContent = `${escapeHtml(fSel)} • ${escapeHtml(dSel)}`;
+  const out = [];
+  for(let p=1;p<=n;p++){ out.push(challengeCard(p, genPlayerBuild())); }
+  $("#challengeResults").innerHTML = out.join('');
+}
 
 load();
