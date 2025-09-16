@@ -111,7 +111,6 @@ function pickOrdered(pool){
   const alts = shuffled.slice(1,3);
   return { main, alts };
 };
-}
 
 function genPlayerBuild(){
   const primary = pickOrdered(ITEMS.primaries);
