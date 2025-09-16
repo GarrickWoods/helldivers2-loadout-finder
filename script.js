@@ -1,5 +1,7 @@
 let DATA=[]; 
 let ITEMS={};
+let itemsReady = false;
+
 const $=sel=>document.querySelector(sel);
 const factionSel=$("#faction"), difficultySel=$("#difficulty"), objectiveSel=$("#objective");
 const results=$("#results"), compNote=$("#compNote");
@@ -36,12 +38,30 @@ async function load(){
   factionSel.value=F; difficultySel.value=D; objectiveSel.value=O;
   render();
 
+  // Disable the roll button until items are ready
+  const rollBtn = $("#rollBtn");
+  if (rollBtn) rollBtn.disabled = true;
+
   try{
     const res=await fetch('items.json?cb='+Date.now());
     if(!res.ok) throw new Error('Failed to load items.json: '+res.status);
     ITEMS=await res.json();
+
+    // Basic shape validation
+    const req = ["factions","difficulties","armor_weights","primaries","sidearms","explosives","boosters","stratagems"];
+    for (const k of req){
+      if (!(k in ITEMS)) throw new Error(`items.json missing "${k}" array/object`);
+    }
+    if (!ITEMS.stratagems || !Array.isArray(ITEMS.stratagems.turrets) || 
+        !Array.isArray(ITEMS.stratagems.bombardment) || !Array.isArray(ITEMS.stratagems.deployables)){
+      throw new Error("items.json stratagems must include turrets, bombardment, and deployables arrays");
+    }
+
     optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
     optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
+
+    itemsReady = true;
+    if (rollBtn) rollBtn.disabled = false;
   }catch(e){ showError(e.message); }
 }
 
@@ -77,7 +97,7 @@ function card(role,weapons,armor,strats){
   return `<article class="card">
     <div class="role">${escapeHtml(role||"Role")}</div>
     <div class="kv"><b>Primary Weapons</b><div>${escapeHtml(weapons||"-")}</div></div>
-    <div class="kv"><b>Armor / boosters</b><div>${escapeHtml(armor||"-")}</div></div>
+    <div class="kv"><b>Armor / Boosters</b><div>${escapeHtml(armor||"-")}</div></div>
     <div class="kv"><b>Stratagems</b><div>${escapeHtml(strats||"-")}</div></div>
   </article>`;
 }
@@ -88,7 +108,7 @@ function copyText(){
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
   for(let i=0;i<6;i++){
-    out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/boosters: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
+    out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Boosters: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
 }
@@ -108,33 +128,48 @@ document.addEventListener('click', (e)=>{
   document.querySelector('#results').classList.toggle('hidden', t!=='finder');
 });
 
-// ---------------- Challenge ----------------
+// ---------- Challenge ----------
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/** ensure a pool exists & has at least N elements (for alternates) */
+function assertPool(name, pool, need=1){
+  if (!Array.isArray(pool) || pool.length < need){
+    throw new Error(`Challenge generator: "${name}" pool is missing or too small (need ${need}, have ${Array.isArray(pool)?pool.length:0})`);
+  }
+}
 
 /** Pick 1 main + N alternates (shuffled) */
 function pickOrdered(pool, altCount=2){
+  assertPool('pool', pool, altCount+1);
   const s = [...pool].sort(()=>Math.random() - 0.5);
   return { main: s[0] || '', alts: s.slice(1, 1 + altCount) };
 }
 
 function genPlayerBuild(){
-  // 2 alternates each
+  // Validate required pools once (throws if invalid)
+  assertPool('primaries',   ITEMS.primaries,   3);
+  assertPool('sidearms',    ITEMS.sidearms,    3);
+  assertPool('explosives',  ITEMS.explosives,  3);
+  assertPool('armor_weights', ITEMS.armor_weights, 1);
+  assertPool('boosters',    ITEMS.boosters,    2);
+
   const primary   = pickOrdered(ITEMS.primaries, 2);
   const sidearm   = pickOrdered(ITEMS.sidearms, 2);
   const explosive = pickOrdered(ITEMS.explosives, 2);
   const armor     = rand(ITEMS.armor_weights);
-  // 1 alternate for booster
-  const booster      = pickOrdered(ITEMS.boosters, 1);
+  const booster   = pickOrdered(ITEMS.boosters, 1); // 1 alternate
 
   // stratagems: 4 required + 2 alternates
   const allStrats = [
     ...(ITEMS.stratagems.turrets || []),
     ...(ITEMS.stratagems.bombardment || []),
     ...(ITEMS.stratagems.deployables || [])
-  ].sort(() => Math.random() - 0.5);
+  ];
+  assertPool('stratagems', allStrats, 6); // 4 main + 2 alts
 
-  const stratMain = allStrats.slice(0, 4);
-  const stratAlt  = allStrats.slice(4, 6); // now only 2 alternates
+  const shuffled = allStrats.sort(() => Math.random() - 0.5);
+  const stratMain = shuffled.slice(0, 4);
+  const stratAlt  = shuffled.slice(4, 6);
 
   return { primary, sidearm, explosive, armor, booster, stratMain, stratAlt };
 }
@@ -151,14 +186,13 @@ function orderedBlock(title, picks){
 
 function challengeCard(idx,b){
   const altLabel = (arr) => (arr && arr.length === 1) ? 'Alternate' : 'Alternates';
-
   return `<article class="card">
     <div class="role">Player ${idx}</div>
     ${orderedBlock('Primary', b.primary)}
     ${orderedBlock('Sidearm', b.sidearm)}
     ${orderedBlock('Explosive', b.explosive)}
     <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
-    ${orderedBlock('booster', b.booster)}
+    ${orderedBlock('Booster', b.booster)}
     <div class="kv"><b>Stratagems (4 required)</b>
       <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
       <div class="small"><b>${altLabel(b.stratAlt || [])}:</b><br>
@@ -167,7 +201,19 @@ function challengeCard(idx,b){
   </article>`;
 }
 
-document.addEventListener('click', (e)=>{ if(e.target && e.target.id==='rollBtn'){ renderChallenge(); } });
+document.addEventListener('click', (e)=>{
+  if(e.target && e.target.id==='rollBtn'){
+    if(!itemsReady){
+      showError('Items are still loading. Please wait a second and try again.');
+      return;
+    }
+    try{
+      renderChallenge();
+    }catch(err){
+      showError(err.message || String(err));
+    }
+  }
+});
 
 function renderChallenge(){
   const n = parseInt($("#players").value,10);
