@@ -108,30 +108,37 @@ document.addEventListener('click', (e)=>{
   document.querySelector('#results').classList.toggle('hidden', t!=='finder');
 });
 
-// Challenge
+// ---------------- Challenge ----------------
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool){
-  const s = [...pool].sort(()=>Math.random() - 0.5);
-  return { main: s[0] || '', alts: s.slice(1, 2) }; // 1 alternate
-}
-function genPlayerBuild(){
-  const primary  = pickOrdered(ITEMS.primaries);
-  const sidearm  = pickOrdered(ITEMS.sidearms);
-  const explosive = pickOrdered(ITEMS.explosives);
-  const armor    = rand(ITEMS.armor_weights);
-  const perk     = pickOrdered(ITEMS.perks); // now has main + alternate
 
+/** Pick 1 main + N alternates (shuffled) */
+function pickOrdered(pool, altCount=2){
+  const s = [...pool].sort(()=>Math.random() - 0.5);
+  return { main: s[0] || '', alts: s.slice(1, 1 + altCount) };
+}
+
+function genPlayerBuild(){
+  // 2 alternates each
+  const primary   = pickOrdered(ITEMS.primaries, 2);
+  const sidearm   = pickOrdered(ITEMS.sidearms, 2);
+  const explosive = pickOrdered(ITEMS.explosives, 2);
+  const armor     = rand(ITEMS.armor_weights);
+  // 1 alternate for perk
+  const perk      = pickOrdered(ITEMS.perks, 1);
+
+  // stratagems: 4 required + 2 alternates
   const allStrats = [
     ...(ITEMS.stratagems.turrets || []),
     ...(ITEMS.stratagems.bombardment || []),
     ...(ITEMS.stratagems.deployables || [])
-  ];
-  const shuffled = allStrats.sort(() => Math.random() - 0.5);
-  const stratMain = shuffled.slice(0, 4);
-  const stratAlt  = shuffled.slice(4, 7); // 3 alternates
+  ].sort(() => Math.random() - 0.5);
+
+  const stratMain = allStrats.slice(0, 4);
+  const stratAlt  = allStrats.slice(4, 6); // now only 2 alternates
 
   return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
 }
+
 function orderedBlock(title, picks){
   const main = escapeHtml((picks.main||'').toString());
   const alts = (picks.alts||[]).map(x=>escapeHtml(x));
@@ -141,9 +148,9 @@ function orderedBlock(title, picks){
     <div class="small"><b>${label}:</b> ${alts.join(', ') || '-'}</div>
   </div>`;
 }
+
 function challengeCard(idx,b){
-  // helper for pluralization
-  const altLabel = (arr) => arr.length === 1 ? 'Alternate' : 'Alternates';
+  const altLabel = (arr) => (arr && arr.length === 1) ? 'Alternate' : 'Alternates';
 
   return `<article class="card">
     <div class="role">Player ${idx}</div>
@@ -159,7 +166,9 @@ function challengeCard(idx,b){
     </div>
   </article>`;
 }
+
 document.addEventListener('click', (e)=>{ if(e.target && e.target.id==='rollBtn'){ renderChallenge(); } });
+
 function renderChallenge(){
   const n = parseInt($("#players").value,10);
   let fSel = $("#challengeFaction").value;
