@@ -109,17 +109,25 @@ document.addEventListener('click', (e)=>{
 
 // Challenge
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool){ const s=[...pool].sort(()=>Math.random()-0.5); return { main:s[0]||'', alts:s.slice(1,3) }; }
+function pickOrdered(pool){
+  const s = [...pool].sort(()=>Math.random() - 0.5);
+  return { main: s[0] || '', alts: s.slice(1, 2) };}
 function genPlayerBuild(){
-  const primary = pickOrdered(ITEMS.primaries);
-  const sidearm = pickOrdered(ITEMS.sidearms);
+  const primary  = pickOrdered(ITEMS.primaries);
+  const sidearm  = pickOrdered(ITEMS.sidearms);
   const explosive = pickOrdered(ITEMS.explosives);
-  const armor = rand(ITEMS.armor_weights);
-  const perk = rand(ITEMS.perks);
-  const allStrats = [...(ITEMS.stratagems.turrets||[]), ...(ITEMS.stratagems.bombardment||[]), ...(ITEMS.stratagems.deployables||[])];
-  const shuffled = allStrats.sort(()=>Math.random()-0.5);
-  const stratMain = shuffled.slice(0,4);
-  const stratAlt = shuffled.slice(4,7);
+  const armor    = rand(ITEMS.armor_weights);
+  const perk     = pickOrdered(ITEMS.perks); // <-- now has main + 1 alternate
+
+  const allStrats = [
+    ...(ITEMS.stratagems.turrets || []),
+    ...(ITEMS.stratagems.bombardment || []),
+    ...(ITEMS.stratagems.deployables || [])
+  ];
+  const shuffled = allStrats.sort(() => Math.random() - 0.5);
+  const stratMain = shuffled.slice(0, 4);
+  const stratAlt  = shuffled.slice(4, 7); // 3 alternates
+
   return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
 }
 function orderedBlock(title, picks){
