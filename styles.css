@@ -29,3 +29,6 @@ select:focus{border-color:#5aa0ff;box-shadow:0 0 0 2px rgba(90,160,255,.2)}
 .alt-list{margin:.25rem 0 0 0;padding-left:1rem}
 .alt-list li{margin:.1rem 0;font-size:.9rem;opacity:.9}
 .card .muted{opacity:.7,font-size:.85rem}
+
+
+.challenge-header{margin:.5rem 0 0; font-size:1.15rem; font-weight:700; opacity:.95}

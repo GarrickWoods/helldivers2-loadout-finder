@@ -100,15 +100,17 @@ let ITEMS={};
 async function loadItems(){
   const res=await fetch('items.json');
   ITEMS=await res.json();
-  optionize($("#challengeFaction"), ITEMS.factions);
-  optionize($("#challengeDifficulty"), ITEMS.difficulties);
+  optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
+  optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
 }
 
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool, count=6){
+function pickOrdered(pool){
   const shuffled=[...pool].sort(()=>Math.random()-0.5);
-  const picks=shuffled.slice(0, Math.min(count, shuffled.length));
-  return { main:picks.slice(0,3), alts:picks.slice(3,6) };
+  const main = shuffled[0] ?? '';
+  const alts = shuffled.slice(1,3);
+  return { main, alts };
+};
 }
 
 function genPlayerBuild(){
@@ -120,24 +122,32 @@ function genPlayerBuild(){
   const allStrats = [...(ITEMS.stratagems.turrets||[]), ...(ITEMS.stratagems.bombardment||[]), ...(ITEMS.stratagems.deployables||[])];
   const shuffled = allStrats.sort(()=>Math.random()-0.5);
   const stratMain = shuffled.slice(0,4);
-  const stratAlt = shuffled.slice(4,6);
+  const stratAlt = shuffled.slice(4,7);
   return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
 }
 
 function renderChallenge(){
   const n = parseInt($("#players").value,10);
-  const f = $("#challengeFaction").value;
-  const d = $("#challengeDifficulty").value;
+  let fSel = $("#challengeFaction").value;
+  let dSel = $("#challengeDifficulty").value;
+  if(fSel==='Random'){ fSel = rand(ITEMS.factions); }
+  if(dSel==='Random'){ dSel = rand(ITEMS.difficulties); }
+  $("#challengeHeader").textContent = `${escapeHtml(fSel)} • ${escapeHtml(dSel)}`;
   const out = [];
   for(let p=1;p<=n;p++){
     const b = genPlayerBuild();
     out.push(challengeCard(p,b));
   }
-  $("#challengeResults").innerHTML = `<div class="card muted">Faction: <b>${escapeHtml(f)}</b> · Difficulty: <b>${escapeHtml(d)}</b> <span class="small">(or closest unlocked)</span></div>` + out.join('');
+  $("#challengeResults").innerHTML = out.join('');
 }
-
 function orderedBlock(title, picks){
+  const main = escapeHtml((picks.main||'').toString());
+  const alts = (picks.alts||[]).map(x=>escapeHtml(x)).join(', ') || '-';
   return `<div class="kv"><b>${title}</b>
+    <div>${main}</div>
+    <div class="small"><b>Alternates:</b> ${alts}</div>
+  </div>`;
+}</b>
     <div><b>1–3:</b> ${escapeHtml((picks.main||[]).join(', '))}</div>
     <div class="small"><b>4–6 (alternates):</b> ${escapeHtml((picks.alts||[]).join(', ') || '-') }</div>
   </div>`;
@@ -159,22 +169,6 @@ function challengeCard(idx,b){
 
 document.addEventListener('click', (e)=>{
   if(e.target && e.target.id==='rollBtn'){ renderChallenge(); }
-  if(e.target && e.target.id==='copyChallenge'){
-    const n = parseInt($("#players").value,10);
-    const f = $("#challengeFaction").value;
-    const d = $("#challengeDifficulty").value;
-    let txt = `Faction: ${f} | Difficulty: ${d} (or closest unlocked)\n\n`;
-    for(let p=1;p<=n;p++){
-      const b = genPlayerBuild();
-      txt += `Player ${p}\n`;
-      txt += `  Primary 1–3: ${(b.primary.main||[]).join(', ')}\n  Primary 4–6: ${(b.primary.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Sidearm 1–3: ${(b.sidearm.main||[]).join(', ')}\n  Sidearm 4–6: ${(b.sidearm.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Explosive 1–3: ${(b.explosive.main||[]).join(', ')}\n  Explosive 4–6: ${(b.explosive.alts||[]).join(', ') || '-'}\n`;
-      txt += `  Armor: ${b.armor}\n  Perk: ${b.perk}\n`;
-      txt += `  Stratagems(4): ${(b.stratMain||[]).join(', ')}\n  Alternates: ${(b.stratAlt||[]).join(', ') || '-'}\n\n`;
-    }
-    navigator.clipboard.writeText(txt).then(()=>alert('Challenge copied!'));
-  }
-});
+  });
 
 load();
