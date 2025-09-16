@@ -11,10 +11,10 @@ const keyMap={
   difficulty:"Difficulty",
   objective:"Objective",
   note:"Recommended_Team_Composition_Notes",
-  class:["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
-  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons","C6_Primary_Weapons"],
-  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks","C6_Armor_Perks"],
-  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems","C6_Stratagems"],
+  class:["Class_1","Class_2","Class_3","Class_4","Class_5"],
+  weapons:["C1_Primary_Weapons","C2_Primary_Weapons","C3_Primary_Weapons","C4_Primary_Weapons","C5_Primary_Weapons"],
+  armor:["C1_Armor_Perks","C2_Armor_Perks","C3_Armor_Perks","C4_Armor_Perks","C5_Armor_Perks"],
+  strats:["C1_Stratagems","C2_Stratagems","C3_Stratagems","C4_Stratagems","C5_Stratagems"],
 };
 
 async function load(){
@@ -53,7 +53,7 @@ function render(){
   if(!row){ results.innerHTML='<p>No data found.</p>'; compNote.textContent=''; return; }
   compNote.textContent = row[keyMap.note] || '';
   const cards=[];
-  for(let i=0;i<6;i++){
+  for(let i=0;i<5;i++){
     cards.push(card(row[keyMap.class[i]], row[keyMap.weapons[i]], row[keyMap.armor[i]], row[keyMap.strats[i]]));
   }
   results.innerHTML = cards.join('');
@@ -74,7 +74,7 @@ function copyText(){
   const row=findRow(f,d,o);
   if(!row) return;
   let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
-  for(let i=0;i<6;i++){
+  for(let i=0;i<5;i++){
     out += `• ${row[keyMap.class[i]]}\n   - Weapons: ${row[keyMap.weapons[i]]}\n   - Armor/Perks: ${row[keyMap.armor[i]]}\n   - Stratagems: ${row[keyMap.strats[i]]}\n\n`;
   }
   navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
@@ -105,12 +105,11 @@ async function loadItems(){
 }
 
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool){
+function pickOrdered(pool, count=6){
   const shuffled=[...pool].sort(()=>Math.random()-0.5);
-  const main = shuffled[0] ?? '';
-  const alts = shuffled.slice(1,3);
-  return { main, alts };
-};
+  const picks=shuffled.slice(0, Math.min(count, shuffled.length));
+  return { main:picks.slice(0,3), alts:picks.slice(3,6) };
+}
 
 function genPlayerBuild(){
   const primary = pickOrdered(ITEMS.primaries);
@@ -121,7 +120,7 @@ function genPlayerBuild(){
   const allStrats = [...(ITEMS.stratagems.turrets||[]), ...(ITEMS.stratagems.bombardment||[]), ...(ITEMS.stratagems.deployables||[])];
   const shuffled = allStrats.sort(()=>Math.random()-0.5);
   const stratMain = shuffled.slice(0,4);
-  const stratAlt = shuffled.slice(4,7);
+  const stratAlt = shuffled.slice(4,6);
   return { primary, sidearm, explosive, armor, perk, stratMain, stratAlt };
 }
 
@@ -140,11 +139,9 @@ function renderChallenge(){
   $("#challengeResults").innerHTML = out.join('');
 }
 function orderedBlock(title, picks){
-  const main = escapeHtml((picks.main||'').toString());
-  const alts = (picks.alts||[]).map(x=>escapeHtml(x)).join(', ') || '-';
   return `<div class="kv"><b>${title}</b>
-    <div>${main}</div>
-    <div class="small"><b>Alternates:</b> ${alts}</div>
+    <div><b>1–3:</b> ${escapeHtml((picks.main||[]).join(', '))}</div>
+    <div class="small"><b>4–6 (alternates):</b> ${escapeHtml((picks.alts||[]).join(', ') || '-') }</div>
   </div>`;
 }
 
@@ -154,9 +151,11 @@ function challengeCard(idx,b){
     ${orderedBlock('Primary Weapons', b.primary)}
     ${orderedBlock('Sidearms', b.sidearm)}
     ${orderedBlock('Explosives', b.explosive)}
-    <><div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div><div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div><div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain || []).join(', '))}</div>
-  <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt || []).join(', ') || '-')}</div>
-</div></>
+    <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
+    <div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div>
+    <div class="kv"><b>Stratagems (4 required)</b><div>${escapeHtml((b.stratMain||[]).join(', '))}</div>
+      <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt||[]).join(', ') || '-')}</div>
+    </div>
   </article>`;
 }
 
