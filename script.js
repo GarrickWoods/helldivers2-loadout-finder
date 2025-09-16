@@ -1,4 +1,5 @@
-let DATA=[]; let ITEMS={};
+let DATA=[]; 
+let ITEMS={};
 const $=sel=>document.querySelector(sel);
 const factionSel=$("#faction"), difficultySel=$("#difficulty"), objectiveSel=$("#objective");
 const results=$("#results"), compNote=$("#compNote");
@@ -111,13 +112,14 @@ document.addEventListener('click', (e)=>{
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function pickOrdered(pool){
   const s = [...pool].sort(()=>Math.random() - 0.5);
-  return { main: s[0] || '', alts: s.slice(1, 2) };}
+  return { main: s[0] || '', alts: s.slice(1, 2) }; // 1 alternate
+}
 function genPlayerBuild(){
   const primary  = pickOrdered(ITEMS.primaries);
   const sidearm  = pickOrdered(ITEMS.sidearms);
   const explosive = pickOrdered(ITEMS.explosives);
   const armor    = rand(ITEMS.armor_weights);
-  const perk     = pickOrdered(ITEMS.perks); // <-- now has main + 1 alternate
+  const perk     = pickOrdered(ITEMS.perks); // now has main + alternate
 
   const allStrats = [
     ...(ITEMS.stratagems.turrets || []),
@@ -145,12 +147,10 @@ function challengeCard(idx,b){
     ${orderedBlock('Sidearm', b.sidearm)}
     ${orderedBlock('Explosive', b.explosive)}
     <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
-    <div class="kv"><b>Perk</b><div>${escapeHtml(b.perk)}</div></div>
+    ${orderedBlock('Perk', b.perk)}
     <div class="kv"><b>Stratagems (4 required)</b>
       <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
-        <div class="small"><b>Alternates:</b><br>${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
-      </div>
-          <div class="small"><b>Alternates:</b> ${escapeHtml((b.stratAlt||[]).join(', ') || '-')}</div>
+      <div class="small"><b>Alternates:</b><br>${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
     </div>
   </article>`;
 }
