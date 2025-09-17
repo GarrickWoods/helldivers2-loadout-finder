@@ -76,43 +76,39 @@ function showError(msg){
 
 async function load(){
   try{
-    const res=await fetch('data.json?cb='+Date.now());
-    if(!res.ok) throw new Error('Failed to load data.json: '+res.status);
-    DATA=await res.json();
+    const res = await fetch('data.json?cb=' + Date.now());
+    if(!res.ok) throw new Error('Failed to load data.json: ' + res.status);
+    DATA = await res.json();
   }catch(e){ showError(e.message); return; }
 
   initSelectors();
 
-  const url=new URL(window.location);
-  const F=url.searchParams.get('faction')||DATA[0][keyMap.faction];
-  const D=url.searchParams.get('difficulty')||DATA[0][keyMap.difficulty];
-  const O=url.searchParams.get('objective')||DATA[0][keyMap.objective];
-  factionSel.value=F; difficultySel.value=D; objectiveSel.value=O;
+  // --- pick initial values (URL -> valid? else first row) ---
+  const url = new URL(window.location);
+  let f = url.searchParams.get('faction');
+  let d = url.searchParams.get('difficulty');
+  let o = url.searchParams.get('objective');
+
+  // helper to verify value exists in DATA
+  const has = (field, val) => DATA.some(r => r[field] === val);
+
+  if(!f || !has(keyMap.faction, f)) f = DATA[0][keyMap.faction];
+  if(!d || !has(keyMap.difficulty, d)) d = DATA[0][keyMap.difficulty];
+  if(!o || !has(keyMap.objective,  o)) o = DATA[0][keyMap.objective];
+
+  // set selects to canonical values and render once
+  factionSel.value = f;
+  difficultySel.value = d;
+  objectiveSel.value = o;
   render();
 
-  const rollBtn = $("#rollBtn");
-  if (rollBtn) rollBtn.disabled = true;
-
+  // items.json is only needed for the Challenge tab
   try{
-    const res=await fetch('items.json?cb='+Date.now());
-    if(!res.ok) throw new Error('Failed to load items.json: '+res.status);
-    ITEMS=await res.json();
-
+    const res = await fetch('items.json?cb=' + Date.now());
+    if(!res.ok) throw new Error('Failed to load items.json: ' + res.status);
+    ITEMS = await res.json();
     optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
     optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
-
-    // build whitelists for Finder sanitization
-    WL.primaries  = buildSet(ITEMS.primaries);
-    WL.sidearms   = buildSet(ITEMS.sidearms);
-    WL.explosives = buildSet(ITEMS.explosives);
-    WL.stratagems = buildSet([
-      ...(ITEMS.stratagems?.turrets||[]),
-      ...(ITEMS.stratagems?.bombardment||[]),
-      ...(ITEMS.stratagems?.deployables||[])
-    ]);
-
-    itemsReady = true;
-    if (rollBtn) rollBtn.disabled = false;
   }catch(e){ showError(e.message); }
 }
 
