@@ -306,48 +306,40 @@ function renderChallenge(){
   $("#challengeResults").innerHTML = out.join('');
 }
 
-// --- Suggestion Box (pure JS) ---
-(function suggestionBoxInit(){
-  const APP_URL = 'YOUR_APPS_SCRIPT_URL'; // e.g. https://script.google.com/macros/s/XXXX/exec
-  const btn  = document.getElementById('suggBtn');
-  const txt  = document.getElementById('suggText');
-  const who  = document.getElementById('suggWho');
-  const stat = document.getElementById('suggStatus');
+(function initCounter(){
+  const NAMESPACE = 'mouthbreathertv-helldivers2';
+  const KEY = 'site-visits';
+  const ENDPOINT = 'https://api.countapi.xyz';
+  const el = document.getElementById('visitCount');
+  if (!el) return;
 
-  if (!btn || !txt || !stat) return; // quietly skip if form isn't on the page
+  const set = v => el.textContent = new Intl.NumberFormat().format(v ?? 0);
 
-  function setStatus(msg, ok){
-    stat.textContent = msg;
-    stat.style.color = ok ? '#8fe18f' : '#ffb3b3';
+  async function ensure() {
+    try {
+      // try get first
+      const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+      if (g.ok) { const d = await g.json(); return d.value; }
+      // if missing, create it at 0
+      const c = await fetch(`${ENDPOINT}/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}&value=0`);
+      if (c.ok) { const d = await c.json(); return d.value; }
+    } catch (_) {}
+    return 0;
   }
 
-  btn.addEventListener('click', async () => {
-    const message = (txt.value || '').trim();
-    if (!message) { setStatus('Please type a suggestion.', false); return; }
-    btn.disabled = true; setStatus('Sending...', true);
-
+  (async () => {
+    const _ = await ensure();
     try {
-      const res = await fetch(APP_URL + `?ua=${encodeURIComponent(navigator.userAgent)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          who: (who?.value || '').trim(),
-          message
-        })
-      });
-      const data = await res.json().catch(()=>({ ok:false }));
-      if (data && data.ok) {
-        setStatus('Thanks — saved!', true);
-        txt.value = '';
-      } else {
-        setStatus('Saved, or will be shortly.', true);
-      }
-    } catch (e) {
-      setStatus('Sent (response blocked).', true);
-    } finally {
-      btn.disabled = false;
-    }
-  });
+      const h = await fetch(`${ENDPOINT}/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+      if (h.ok) { const d = await h.json(); set(d.value); return; }
+    } catch (_) {}
+    // fallback to get if hit failed (adblock, etc.)
+    try {
+      const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+      if (g.ok) { const d = await g.json(); set(d.value); return; }
+    } catch (_) {}
+    set(0);
+  })();
 })();
 
 load();
