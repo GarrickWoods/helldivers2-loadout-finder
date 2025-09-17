@@ -9,24 +9,18 @@
     header {
       text-align: center;
       padding: 20px 0;
+      /* 20px top and bottom */
     }
 
-    .header-image {
-      display: block;
-      /* stack vertically */
-      margin: 0 auto;
-      /* keep centered */
-      max-width: 1200px;
-      min-width: 800px;
+    header img {
+      max-width: 400px;
+      /* won’t get larger than 400px */
+      min-width: 150px;
+      /* won’t get smaller than 150px */
       width: 100%;
+      /* scales between min and max */
       height: auto;
-    }
-
-    .header-image.top {
-      max-height: 100px;
-      /* cap height for the top image */
-      object-fit: contain;
-      /* prevent distortion */
+      /* keeps aspect ratio */
     }
 
     nav.tabs {
@@ -43,11 +37,11 @@
 
 <body>
   <header>
-    <!-- Top image with height restriction -->
-    <img src="HellaThickDivers.jpg" alt="Top Image" class="header-image top">
-
-    <!-- Main logo -->
-    <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo" class="header-image">
+    <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
+    <nav class="tabs">
+      <button class="tab active" data-tab="finder">Loadout Finder</button>
+      <button class="tab" data-tab="challenge">Squad Challenge</button>
+    </nav>
   </header>
 </body>
 
