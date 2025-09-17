@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Helldivers Header</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Helldivers 2 Loadout Finder</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
     header {
       text-align: center;
@@ -12,13 +14,23 @@
 
     header img {
       max-width: 400px;
-      /* image won’t get larger than 400px */
+      /* won’t get larger than 400px */
       min-width: 150px;
-      /* image won’t get smaller than 150px */
+      /* won’t get smaller than 150px */
       width: 100%;
       /* scales between min and max */
       height: auto;
       /* keeps aspect ratio */
+    }
+
+    nav.tabs {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    nav.tabs button {
+      margin: 0 5px;
+      padding: 8px 12px;
     }
   </style>
 </head>
@@ -26,20 +38,13 @@
 <body>
   <header>
     <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
+    <nav class="tabs">
+      <button class="tab active" data-tab="finder">Loadout Finder</button>
+      <button class="tab" data-tab="challenge">Squad Challenge</button>
+    </nav>
   </header>
 </body>
 
-<body>
-  <header>
-    <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
-  </header>
-</body>
-  <body>
-    <header>
-      <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
-    </header>
-  </body>
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Helldivers 2 Loadout Finder</title>
