@@ -76,40 +76,48 @@ function showError(msg){
 
 async function load(){
   try{
-    const res = await fetch('data.json?cb=' + Date.now());
-    if(!res.ok) throw new Error('Failed to load data.json: ' + res.status);
-    DATA = await res.json();
-  }catch(e){ showError(e.message); return; }
+    // Load BOTH files first
+    const [dataRes, itemsRes] = await Promise.all([
+      fetch('data.json?cb=' + Date.now()),
+      fetch('items.json?cb=' + Date.now())
+    ]);
+    if(!dataRes.ok) throw new Error('Failed to load data.json: ' + dataRes.status);
+    if(!itemsRes.ok) throw new Error('Failed to load items.json: ' + itemsRes.status);
 
+    DATA  = await dataRes.json();
+    ITEMS = await itemsRes.json();
+    buildWhitelistFromItems(); // <-- fill WL sets before we render anything
+
+  }catch(e){
+    showError(e.message || String(e));
+    return;
+  }
+
+  // Populate selectors from DATA
   initSelectors();
 
-  // --- pick initial values (URL -> valid? else first row) ---
+  // Choose initial values (URL if valid; otherwise first row)
   const url = new URL(window.location);
+  const has = (field, val) => DATA.some(r => r[field] === val);
+
   let f = url.searchParams.get('faction');
   let d = url.searchParams.get('difficulty');
   let o = url.searchParams.get('objective');
 
-  // helper to verify value exists in DATA
-  const has = (field, val) => DATA.some(r => r[field] === val);
+  if(!f || !has(keyMap.faction, f))     f = DATA[0][keyMap.faction];
+  if(!d || !has(keyMap.difficulty, d))  d = DATA[0][keyMap.difficulty];
+  if(!o || !has(keyMap.objective,  o))  o = DATA[0][keyMap.objective];
 
-  if(!f || !has(keyMap.faction, f)) f = DATA[0][keyMap.faction];
-  if(!d || !has(keyMap.difficulty, d)) d = DATA[0][keyMap.difficulty];
-  if(!o || !has(keyMap.objective,  o)) o = DATA[0][keyMap.objective];
-
-  // set selects to canonical values and render once
   factionSel.value = f;
   difficultySel.value = d;
   objectiveSel.value = o;
+
+  // Now it's safe to render (WL + DATA are ready)
   render();
 
-  // items.json is only needed for the Challenge tab
-  try{
-    const res = await fetch('items.json?cb=' + Date.now());
-    if(!res.ok) throw new Error('Failed to load items.json: ' + res.status);
-    ITEMS = await res.json();
-    optionize($("#challengeFaction"), ["Random", ...ITEMS.factions]);
-    optionize($("#challengeDifficulty"), ["Random", ...ITEMS.difficulties]);
-  }catch(e){ showError(e.message); }
+  // Set up challenge selectors
+  optionize($("#challengeFaction"), ["Random", ...(ITEMS.factions || [])]);
+  optionize($("#challengeDifficulty"), ["Random", ...(ITEMS.difficulties || [])]);
 }
 
 function uniqueBy(field){ return [...new Set(DATA.map(r=>r[field]).filter(Boolean))]; }
@@ -127,11 +135,19 @@ function initSelectors(){
 function findRow(f,d,o){ return DATA.find(r=>r[keyMap.faction]===f && r[keyMap.difficulty]===d && r[keyMap.objective]===o); }
 
 function render(){
-  const f=factionSel.value, d=difficultySel.value, o=objectiveSel.value;
-  const row=findRow(f,d,o);
-  const params=new URLSearchParams({ faction:f, difficulty:d, objective:o });
+  if(!itemsReady || !DATA.length) return; // avoid early blanking
+
+  const f = factionSel.value, d = difficultySel.value, o = objectiveSel.value;
+  const row = findRow(f,d,o);
+  const params = new URLSearchParams({ faction:f, difficulty:d, objective:o });
   history.replaceState(null,"","?"+params.toString());
-  if(!row){ results.innerHTML='<p>No data found.</p>'; compNote.textContent=''; return; }
+
+  if(!row){
+    results.innerHTML = '<div class="card"><div class="role">No data found</div></div>';
+    compNote.textContent = '';
+    return;
+  }
+
   compNote.textContent = row[keyMap.note] || '';
 
   const cards=[];
@@ -143,16 +159,16 @@ function render(){
     const armorRaw  = pickField(row, keyMap.armor[i]);
     const stratRaw  = pickField(row, keyMap.strats[i]);
 
-    // sanitize fields using official item lists
-    const primaries   = filterToWhitelist(primRaw,  WL.primaries,  `Primary (Class ${i+1})`).join(', ') || '-';
-    const sidearms    = filterToWhitelist(sideRaw,  WL.sidearms,   `Sidearm (Class ${i+1})`).join(', ') || '-';
-    const explosives  = filterToWhitelist(explRaw,  WL.explosives, `Explosive (Class ${i+1})`).join(', ') || '-';
-    const stratagems  = filterToWhitelist(stratRaw, WL.stratagems, `Stratagems (Class ${i+1})`).join(', ') || '-';
+    const primaries  = filterToWhitelist(primRaw,  WL.primaries,  `Primary (Class ${i+1})`).join(', ') || '-';
+    const sidearms   = filterToWhitelist(sideRaw,  WL.sidearms,   `Sidearm (Class ${i+1})`).join(', ') || '-';
+    const explosives = filterToWhitelist(explRaw,  WL.explosives, `Explosive (Class ${i+1})`).join(', ') || '-';
+    const stratagems = filterToWhitelist(stratRaw, WL.stratagems, `Stratagems (Class ${i+1})`).join(', ') || '-';
 
     cards.push(card(role, primaries, sidearms, explosives, armorRaw, stratagems));
   }
   results.innerHTML = cards.join('');
 }
+
 
 function card(role,primary,sidearm,explosive,armor,strats){
   const row = (label, val) => !val ? '' :
@@ -337,5 +353,17 @@ function renderChallenge(){
     set(0);
   })();
 })();
+
+function buildWhitelistFromItems(){
+  WL.primaries  = buildSet(ITEMS.primaries);
+  WL.sidearms   = buildSet(ITEMS.sidearms);
+  WL.explosives = buildSet(ITEMS.explosives);
+  WL.stratagems = buildSet([
+    ...(ITEMS.stratagems?.turrets || []),
+    ...(ITEMS.stratagems?.bombardment || []),
+    ...(ITEMS.stratagems?.deployables || []),
+  ]);
+  itemsReady = true;
+}
 
 load();
