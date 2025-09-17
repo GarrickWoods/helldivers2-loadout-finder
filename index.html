@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Helldivers Header</title>
-    <style>
-      header {
-        text-align: center;
-        padding: 20px 0;
-        /* 20px top and bottom */
-      }
-  
-      header img {
-        max-width: 100%;
-        height: auto;
-      }
-    </style>
-  </head>
-  
+<head>
+  <meta charset="UTF-8">
+  <title>Helldivers Header</title>
+  <style>
+    header {
+      text-align: center;
+      padding: 20px 0;
+      /* 20px top and bottom */
+    }
+
+    header img {
+      max-width: 400px;
+      /* image won’t get larger than 400px */
+      min-width: 150px;
+      /* image won’t get smaller than 150px */
+      width: 100%;
+      /* scales between min and max */
+      height: auto;
+      /* keeps aspect ratio */
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
+  </header>
+</body>
   <body>
     <header>
       <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
