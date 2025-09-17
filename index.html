@@ -12,8 +12,12 @@
       <button class="tab active" data-tab="finder">Loadout Finder</button>
       <button class="tab" data-tab="challenge">Squad Challenge</button>
     </nav>
-    <h1>Helldivers 2 Loadout Finder</h1>
-    <p class="sub">Choose <strong>Faction</strong>, <strong>Difficulty</strong>, and <strong>Objective</strong> to get a <strong>6‑class</strong> squad with full loadouts.</p>
+
+    <div class="visit-counter">
+      Visitors: <span id="visitCount">—</span>
+    </div>
+
+    <h1>MouthbreatherTV - Helldivers 2 Loadout Finder</h1>
     <p class="sub">Developed by MouthbreatherTV for the purpose of "because we can". Follow us on YouTube and Twitch, and let us know if we're missing anything!</p>
     <p class="sub">
       <a href="https://www.youtube.com/@mouthbreathertv" target="_blank" rel="noopener">
@@ -56,7 +60,10 @@
     </div>
   </section>
 
-  <section class="container note"><div id="compNote"></div></section>
+  <section class="container note">
+    <p class="sub">Mission Note:</p>
+    <div id="compNote"></div>
+  </section>
 
   <section class="container" id="errors" style="display:none;">
     <div class="errorbox"></div>

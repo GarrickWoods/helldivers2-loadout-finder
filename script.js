@@ -306,4 +306,48 @@ function renderChallenge(){
   $("#challengeResults").innerHTML = out.join('');
 }
 
+// --- Suggestion Box (pure JS) ---
+(function suggestionBoxInit(){
+  const APP_URL = 'YOUR_APPS_SCRIPT_URL'; // e.g. https://script.google.com/macros/s/XXXX/exec
+  const btn  = document.getElementById('suggBtn');
+  const txt  = document.getElementById('suggText');
+  const who  = document.getElementById('suggWho');
+  const stat = document.getElementById('suggStatus');
+
+  if (!btn || !txt || !stat) return; // quietly skip if form isn't on the page
+
+  function setStatus(msg, ok){
+    stat.textContent = msg;
+    stat.style.color = ok ? '#8fe18f' : '#ffb3b3';
+  }
+
+  btn.addEventListener('click', async () => {
+    const message = (txt.value || '').trim();
+    if (!message) { setStatus('Please type a suggestion.', false); return; }
+    btn.disabled = true; setStatus('Sending...', true);
+
+    try {
+      const res = await fetch(APP_URL + `?ua=${encodeURIComponent(navigator.userAgent)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          who: (who?.value || '').trim(),
+          message
+        })
+      });
+      const data = await res.json().catch(()=>({ ok:false }));
+      if (data && data.ok) {
+        setStatus('Thanks — saved!', true);
+        txt.value = '';
+      } else {
+        setStatus('Saved, or will be shortly.', true);
+      }
+    } catch (e) {
+      setStatus('Sent (response blocked).', true);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
+
 load();

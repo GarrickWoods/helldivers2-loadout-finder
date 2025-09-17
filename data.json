@@ -5880,7 +5880,7 @@
     "C6_Stratagems": "Autocannon Sentry, Rocket Sentry, Orbital Railcannon Strike, Eagle 110MM Rocket Pods, Anti-Tank Mines, Shield Generator Relay"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -5922,7 +5922,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -5964,7 +5964,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6006,7 +6006,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6048,7 +6048,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -6090,7 +6090,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6132,7 +6132,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Trivial",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -6174,7 +6174,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -6216,7 +6216,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -6258,7 +6258,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6300,7 +6300,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6342,7 +6342,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -6384,7 +6384,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6426,7 +6426,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Easy",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -6468,7 +6468,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -6510,7 +6510,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -6552,7 +6552,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6594,7 +6594,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6636,7 +6636,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Low enemy counts—flexible kits.",
@@ -6678,7 +6678,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Low enemy counts—flexible kits.",
@@ -6720,7 +6720,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Medium",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Low enemy counts—flexible kits.",
@@ -6762,7 +6762,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -6804,7 +6804,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -6846,7 +6846,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -6888,7 +6888,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -6930,7 +6930,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -6972,7 +6972,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7014,7 +7014,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Challenging",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -7056,7 +7056,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -7098,7 +7098,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -7140,7 +7140,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7182,7 +7182,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7224,7 +7224,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -7266,7 +7266,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7308,7 +7308,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Hard",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -7350,7 +7350,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -7392,7 +7392,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -7434,7 +7434,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7476,7 +7476,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7518,7 +7518,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. More heavies/patrols—dedicated anti-armor needed.",
@@ -7560,7 +7560,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. More heavies/patrols—dedicated anti-armor needed.",
@@ -7602,7 +7602,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Extreme",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. More heavies/patrols—dedicated anti-armor needed.",
@@ -7644,7 +7644,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -7686,7 +7686,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -7728,7 +7728,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -7770,7 +7770,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -7812,7 +7812,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -7854,7 +7854,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -7896,7 +7896,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Suicide Mission",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -7938,7 +7938,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -7980,7 +7980,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -8022,7 +8022,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8064,7 +8064,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8106,7 +8106,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -8148,7 +8148,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8190,7 +8190,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Impossible",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -8232,7 +8232,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -8274,7 +8274,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -8316,7 +8316,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8358,7 +8358,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8400,7 +8400,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -8442,7 +8442,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8484,7 +8484,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Helldive",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -8526,7 +8526,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Elimination",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -8568,7 +8568,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Defense",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",
@@ -8610,7 +8610,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Escort",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8652,7 +8652,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Capture/Activate",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8694,7 +8694,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Sabotage/Destroy",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Bring anti-armor burst and mobility. Constant heavies—redundancy and Heavy armor advised.",
@@ -8736,7 +8736,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Retrieve/Carry",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Mobility and crowd control prioritized. Constant heavies—redundancy and Heavy armor advised.",
@@ -8778,7 +8778,7 @@
     "C6_Stratagems": "Shield Generator Relay, Orbital Smoke Strike, Orbital Railcannon Strike, Eagle 500KG Bomb, Guard Dog Rover, Autocannon Sentry"
   },
   {
-    "Faction": "Illuminate",
+    "Faction": "Illuminate (Squids)",
     "Difficulty": "Super Helldive",
     "Objective": "Final Extraction",
     "Recommended_Team_Composition_Notes": "Energy/EM and precision. Use smoke/EMS to break lines; shields complicate ballistics. Prefer sustained AOE and sentry coverage. Constant heavies—redundancy and Heavy armor advised.",

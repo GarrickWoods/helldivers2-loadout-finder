@@ -40,3 +40,8 @@ a:focus {
 }
 
 
+.visit-counter {
+    font-size: .9rem;
+    opacity: .85;
+    margin-bottom: .4rem
+}
