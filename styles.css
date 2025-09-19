@@ -45,3 +45,26 @@ a:focus {
     opacity: .85;
     margin-bottom: .4rem
 }
+
+.promo-banner {
+    max-width: 1100px;
+    /* matches .container max-width */
+    margin: 2rem auto;
+    /* spacing above/below */
+    text-align: center;
+}
+
+.promo-banner img {
+    width: 100%;
+    /* scale with container */
+    height: auto;
+    /* keep aspect ratio */
+    border-radius: 0.6rem;
+    /* optional rounded corners */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.promo-banner img:hover {
+    transform: scale(1.02);
+}
