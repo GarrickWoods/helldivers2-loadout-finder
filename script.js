@@ -372,4 +372,32 @@ function buildWhitelistFromItems(){
   itemsReady = true;
 }
 
+(function initHitsCounter(){
+  function start(){
+    const ID = 'mouthbreathertv-helldivers2'; // unique ID for your site
+    const el = document.getElementById('visitCount');
+    if (!el) return;
+
+    const set = (n) => el.textContent = new Intl.NumberFormat().format(n ?? 0);
+
+    fetch(`https://hits.sh/${encodeURIComponent(ID)}.json?view=1`, {
+      cache: 'no-store',
+      mode: 'cors',
+    })
+    .then(r => r.json())
+    .then(d => set((d && typeof d.hits === 'number') ? d.hits : 0))
+    .catch(err => {
+      console.warn('hits.sh failed:', err);
+      set(0);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+
+
 load();
