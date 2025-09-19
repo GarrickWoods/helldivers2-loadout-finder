@@ -1,11 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Helldivers 2 Loadout Finder</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    header {
+      text-align: center;
+      padding: 20px 0;
+      /* 20px top and bottom */
+    }
+
+    header img {
+      max-width: 400px;
+      /* won’t get larger than 400px */
+      min-width: 150px;
+      /* won’t get smaller than 150px */
+      width: 100%;
+      /* scales between min and max */
+      height: auto;
+      /* keeps aspect ratio */
+    }
+
+    nav.tabs {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    nav.tabs button {
+      margin: 0 5px;
+      padding: 8px 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="HelldiversLogoWhite_NoBG.svg" alt="Helldivers Logo">
+  </header>
+</body>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Helldivers 2 Loadout Finder</title>
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Filter Helldivers 2 loadouts by faction, difficulty, and objective. Shows five recommended roles with weapons, armor/perks, and stratagems. Includes a Squad Challenge generator.">
 </head>
 <body>
   <header class="container">
@@ -13,8 +52,33 @@
       <button class="tab active" data-tab="finder">Loadout Finder</button>
       <button class="tab" data-tab="challenge">Squad Challenge</button>
     </nav>
-    <h1>Helldivers 2 Loadout Finder</h1>
-    <p class="sub">Choose <strong>Faction</strong>, <strong>Difficulty</strong>, and <strong>Objective</strong> to get a 6‑class squad with full loadouts.</p>
+
+    <div class="visit-counter">
+      Lifetime Site Visitors: <span id="visitCount">—</span>
+    </div>
+
+    <h1>MouthbreatherTV - Helldivers 2 Loadout Finder</h1>
+    <p class="sub">Developed by MouthbreatherTV for the purpose of "because we can". Follow us on YouTube and Twitch, and let us know if we're missing anything!</p>
+    <p class="sub">
+      <a href="https://www.youtube.com/@mouthbreathertv" target="_blank" rel="noopener">
+        YouTube.com/@MouthbreatherTV 
+      </a>
+    </p>
+    <p class="sub">
+      <a href="https://www.twitch.tv/mouthbreatherttv" target="_blank" rel="noopener">
+          Twitch.tv/MouthbreatherTTV
+        </a>
+    </p>
+    <p class="sub">
+      <a href="https://www.instagram.com/mouthbreathertv/#" target="_blank" rel="noopener">
+        MouthbreatherTV Instagram
+      </a>
+    </p>
+    <p class="sub">
+      <a href="https://www.tiktok.com/@mouthbreather.ttv" target="_blank" rel="noopener">
+        MouthbreatherTV TikTok
+      </a>
+    </p>
   </header>
 
   <section class="container controls">
@@ -31,13 +95,18 @@
       <select id="objective"></select>
     </div>
     <div class="control inline-btns">
-      <button id="shareBtn" title="Copy a link to this configuration">Share</button>
-      <button id="copyBtn" title="Copy the loadout table as text">Copy</button>
+      <button id="shareBtn">Share</button>
+      <button id="copyBtn">Copy</button>
     </div>
   </section>
 
   <section class="container note">
+    <p class="sub">Mission Note:</p>
     <div id="compNote"></div>
+  </section>
+
+  <section class="container" id="errors" style="display:none;">
+    <div class="errorbox"></div>
   </section>
 
   <section class="container results" id="results"></section>
@@ -51,7 +120,6 @@
       <div class="control">
         <label>Difficulty</label>
         <select id="challengeDifficulty"></select>
-        
       </div>
       <div class="control">
         <label>Faction</label>
@@ -59,20 +127,24 @@
       </div>
       <div class="control inline-btns">
         <button id="rollBtn">🎲 Generate Squad</button>
-        
       </div>
-    </div>
-    <div class="container">
-      <p class="sub">Each player gets a random build. Faction & difficulty apply to everyone. Weapons show ordered picks (1–3 mains, 4–6 backups) for unlock progression.</p>
     </div>
     <div class="container"><h2 id="challengeHeader" class="challenge-header"></h2></div>
     <section class="container results" id="challengeResults"></section>
   </section>
 
+  <div class="promo-banner">
+    <a href="https://www.youtube.com/@mouthbreathertv" target="_blank" rel="noopener">
+      <img src="HellaThickDivers.jpg" alt="Hellathickdivers Banner">
+    </a>
+  </div>
+
   <footer class="container footer">
     <p>Built by MouthbreatherTV · Static site, no tracking
-  </footer>
+    <p>Hank has AIDS
 
-  <script src="script.js"></script>
+  <script src="script.js?v=v6_debug"></script>
+
+<script src="script.js" defer></script>
 </body>
 </html>

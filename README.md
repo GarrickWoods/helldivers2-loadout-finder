@@ -3,7 +3,9 @@
 A free web app for **Helldivers 2** players to plan squad loadouts or generate random challenge squads.  
 Built for the MouthbreatherTV community.
 
-🌐 Live site: [https://mouthbreatherrick.github.io/helldivers2-loadout-finder/](https://mouthbreatherrick.github.io/helldivers2-loadout-finder/)
+🌐 Live site: https://tinyurl.com/h5hsxbym
+
+[https://mouthbreatherrick.github.io/helldivers2-loadout-finder/](https://mouthbreatherrick.github.io/helldivers2-loadout-finder/)
 
 ---
 
@@ -14,7 +16,7 @@ Built for the MouthbreatherTV community.
 - Select **Faction**, **Difficulty**, and **Objective**
 - View a **6-class recommended squad** with:
   - Primary Weapons
-  - Armor / Perks
+  - Armor / boosters
   - Stratagems
 - Notes on team composition & scaling with difficulty
 
@@ -27,7 +29,7 @@ Built for the MouthbreatherTV community.
   - Sidearm + 2 alternates
   - Explosive + 2 alternates
   - Armor Weight
-  - Perk
+  - booster
   - 4 required Stratagems + 3 alternates
 - “Closest unlocked difficulty” reminder for progression
 - Items are data-driven so you can easily add new ones
