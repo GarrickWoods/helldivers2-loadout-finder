@@ -1,403 +1,726 @@
-let DATA = [];
-let ITEMS = {};
-let itemsReady = false;
+/* =========================================================================
+   Helldivers 2 — Loadout Finder + Squad Challenge Generator
+   ========================================================================= */
 
-const $ = sel => document.querySelector(sel);
-const factionSel = $("#faction"), difficultySel = $("#difficulty"), objectiveSel = $("#objective");
-const results = $("#results"), compNote = $("#compNote");
+(() => {
+  // --------------------------
+  // Constants & Defaults
+  // --------------------------
+  const DEFAULTS = {
+    faction: "Terminids (Bugs)",
+    difficulty: "Challenging",
+    synergy: "balanced",
+    objective: "Destroy Nests",
+    roles: [
+      { id: "heavy", name: "Heavy / Anti-Armor" },
+      { id: "assault", name: "Assault (Versatile)" },
+      { id: "recon", name: "Recon / Scout" },
+      { id: "support", name: "Support Specialist" },
+      { id: "medic", name: "Medic / Sustain" },
+      { id: "demo", name: "Demolitions Expert" },
+    ],
+    // Safe fallback objectives if none are found in curated/dataset
+    fallbackObjectives: [
+      "Destroy Nests",
+      "Eliminate Bile Titans",
+      "Sabotage Facilities",
+      "Escort Convoy",
+      "Radiotower Uplink",
+      "Extract Samples",
+    ],
+  };
 
-/* ---------------- tolerant key map (supports multiple field names) ---------------- */
-const keyMap = {
-  faction: "Faction",
-  difficulty: "Difficulty",
-  objective: "Objective",
-  note: "Recommended_Team_Composition_Notes",
+  // Stratagems we must never accidentally exclude (ensure presence)
+  const MUST_INCLUDE_STRATAGEMS = [
+    "Quasar Cannon",
+    "Orbital Napalm Strike", // sometimes also "Orbital Napalm"
+    "Emancipator Exosuit",   // Emancipator line, ensure presence
+  ];
 
-  class: ["Class_1","Class_2","Class_3","Class_4","Class_5","Class_6"],
+  // Faction-specific grenade hints
+  const GRENADE_HINTS = {
+    "Terminids (Bugs)": ["Incendiary Grenade", "Incendiary Impact", "Stun Grenade"],
+    "Automatons (Bots)": ["Thermite Grenade", "EMP Grenade", "Anti-Armor Grenade"],
+    "Illuminate (Squids)": ["EMP Grenade", "Stun Grenade", "Fragmentation Grenade"],
+  };
 
-  weapons: [
-    ["C1_Primary_Weapons","C1_Primary","C1_Weapons"],
-    ["C2_Primary_Weapons","C2_Primary","C2_Weapons"],
-    ["C3_Primary_Weapons","C3_Primary","C3_Weapons"],
-    ["C4_Primary_Weapons","C4_Primary","C4_Weapons"],
-    ["C5_Primary_Weapons","C5_Primary","C5_Weapons"],
-    ["C6_Primary_Weapons","C6_Primary","C6_Weapons"],
-  ],
-  sidearms: [
-    ["C1_Sidearm","C1_Secondary","C1_Sidearms"],
-    ["C2_Sidearm","C2_Secondary","C2_Sidearms"],
-    ["C3_Sidearm","C3_Secondary","C3_Sidearms"],
-    ["C4_Sidearm","C4_Secondary","C4_Sidearms"],
-    ["C5_Sidearm","C5_Secondary","C5_Sidearms"],
-    ["C6_Sidearm","C6_Secondary","C6_Sidearms"],
-  ],
-  explosives: [
-    ["C1_Explosive","C1_Grenade","C1_Throwable"],
-    ["C2_Explosive","C2_Grenade","C2_Throwable"],
-    ["C3_Explosive","C3_Grenade","C3_Throwable"],
-    ["C4_Explosive","C4_Grenade","C4_Throwable"],
-    ["C5_Explosive","C5_Grenade","C5_Throwable"],
-    ["C6_Explosive","C6_Grenade","C6_Throwable"],
-  ],
-  // supports Armor/Boosters phrasing
-  armor: [
-    ["C1_Armor_boosters","C1_Armor_Perks","C1_Armor"],
-    ["C2_Armor_boosters","C2_Armor_Perks","C2_Armor"],
-    ["C3_Armor_boosters","C3_Armor_Perks","C3_Armor"],
-    ["C4_Armor_boosters","C4_Armor_Perks","C4_Armor"],
-    ["C5_Armor_boosters","C5_Armor_Perks","C5_Armor"],
-    ["C6_Armor_boosters","C6_Armor_Perks","C6_Armor"],
-  ],
-  strats: [
-    ["C1_Stratagems","C1_Strategems","C1_Strats"],
-    ["C2_Stratagems","C2_Strategems","C2_Strats"],
-    ["C3_Stratagems","C3_Strategems","C3_Strats"],
-    ["C4_Stratagems","C4_Strategems","C4_Strats"],
-    ["C5_Stratagems","C5_Strategems","C5_Strats"],
-    ["C6_Stratagems","C6_Strategems","C6_Strats"],
-  ],
-};
+  // Data cache
+  const STATE = {
+    curated: null,           // data.json
+    items: null,             // items.json
+    usage: null,             // helldive_live_merged_dataset.json (community)
+    usageWeights: {},        // name -> 0..1
+    isReady: false,
+  };
 
-// first non-empty key from a candidate list
-function pickField(row, candidates) {
-  if (!Array.isArray(candidates)) return row[candidates];
-  for (const k of candidates) {
-    if (k in row && row[k] != null && String(row[k]).trim() !== "") return row[k];
-  }
-  return "";
-}
+  // DOM refs
+  const el = {
+    tabs: null,
+    panels: null,
+    faction: null,
+    difficulty: null,
+    objective: null,
+    synergy: null,
+    reroll: null,
+    finderGrid: null,
+    challengeGrid: null,
+    randomizeChallenge: null,
+    enforceBoosters: null,
+    factionGrenades: null,
+    visitorCount: null,
+  };
 
-function showError(msg){
-  const box = document.querySelector('.errorbox');
-  document.getElementById('errors').style.display='block';
-  box.textContent = msg;
-  console.error(msg);
-}
+  // --------------------------
+  // Utilities
+  // --------------------------
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function load(){
-  try{
-    // Load BOTH files first
-    const [dataRes, itemsRes] = await Promise.all([
-      fetch('data.json?cb=' + Date.now()),
-      fetch('items.json?cb=' + Date.now())
-    ]);
-    if(!dataRes.ok) throw new Error('Failed to load data.json: ' + dataRes.status);
-    if(!itemsRes.ok) throw new Error('Failed to load items.json: ' + itemsRes.status);
-
-    DATA  = await dataRes.json();
-    ITEMS = await itemsRes.json();
-    buildWhitelistFromItems(); // <-- fill WL sets before we render anything
-
-  }catch(e){
-    showError(e.message || String(e));
-    return;
+  async function fetchJSON(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
+    return res.json();
   }
 
-  // Populate selectors from DATA
-  initSelectors();
-
-  // Choose initial values (URL if valid; otherwise first row)
-  const url = new URL(window.location);
-  const has = (field, val) => DATA.some(r => r[field] === val);
-
-  let f = url.searchParams.get('faction');
-  let d = url.searchParams.get('difficulty');
-  let o = url.searchParams.get('objective');
-
-  if(!f || !has(keyMap.faction, f))     f = DATA[0][keyMap.faction];
-  if(!d || !has(keyMap.difficulty, d))  d = DATA[0][keyMap.difficulty];
-  if(!o || !has(keyMap.objective,  o))  o = DATA[0][keyMap.objective];
-
-  factionSel.value = f;
-  difficultySel.value = d;
-  objectiveSel.value = o;
-
-  // Now it's safe to render (WL + DATA are ready)
-  render();
-
-  // Set up challenge selectors
-  optionize($("#challengeFaction"), ["Random", ...(ITEMS.factions || [])]);
-  optionize($("#challengeDifficulty"), ["Random", ...(ITEMS.difficulties || [])]);
-}
-
-function uniqueBy(field){ return [...new Set(DATA.map(r=>r[field]).filter(Boolean))]; }
-function optionize(sel, values){ sel.innerHTML = values.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join(''); }
-
-function initSelectors(){
-  optionize(factionSel, uniqueBy(keyMap.faction));
-  optionize(difficultySel, uniqueBy(keyMap.difficulty));
-  optionize(objectiveSel, uniqueBy(keyMap.objective));
-  [factionSel,difficultySel,objectiveSel].forEach(el=>el.addEventListener('change',render));
-  $("#shareBtn").addEventListener('click',()=>navigator.clipboard.writeText(location.href).then(()=>alert('Shareable link copied!')));
-  $("#copyBtn").addEventListener('click',copyText);
-}
-
-function findRow(f,d,o){ return DATA.find(r=>r[keyMap.faction]===f && r[keyMap.difficulty]===d && r[keyMap.objective]===o); }
-
-function render(){
-  if(!itemsReady || !DATA.length) return; // avoid early blanking
-
-  const f = factionSel.value, d = difficultySel.value, o = objectiveSel.value;
-  const row = findRow(f,d,o);
-  const params = new URLSearchParams({ faction:f, difficulty:d, objective:o });
-  history.replaceState(null,"","?"+params.toString());
-
-  if(!row){
-    results.innerHTML = '<div class="card"><div class="role">No data found</div></div>';
-    compNote.textContent = '';
-    return;
+  function uniq(arr) {
+    return [...new Set(arr)];
   }
 
-  compNote.textContent = row[keyMap.note] || '';
-
-  const cards=[];
-  for(let i=0;i<6;i++){
-    const role      = pickField(row, keyMap.class[i]);
-    const primRaw   = pickField(row, keyMap.weapons[i]);
-    const sideRaw   = pickField(row, keyMap.sidearms[i]);
-    const explRaw   = pickField(row, keyMap.explosives[i]);
-    const armorRaw  = pickField(row, keyMap.armor[i]);
-    const stratRaw  = pickField(row, keyMap.strats[i]);
-
-    const primaries  = filterToWhitelist(primRaw,  WL.primaries,  `Primary (Class ${i+1})`).join(', ') || '-';
-    const sidearms   = filterToWhitelist(sideRaw,  WL.sidearms,   `Sidearm (Class ${i+1})`).join(', ') || '-';
-    const explosives = filterToWhitelist(explRaw,  WL.explosives, `Explosive (Class ${i+1})`).join(', ') || '-';
-    const stratagems = filterToWhitelist(stratRaw, WL.stratagems, `Stratagems (Class ${i+1})`).join(', ') || '-';
-
-    cards.push(card(role, primaries, sidearms, explosives, armorRaw, stratagems));
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
   }
-  results.innerHTML = cards.join('');
-}
 
-
-function card(role,primary,sidearm,explosive,armor,strats){
-  const row = (label, val) => !val ? '' :
-    `<div class="kv"><b>${label}</b><div>${escapeHtml(val)}</div></div>`;
-  return `<article class="card">
-    <div class="role">${escapeHtml(role||"Role")}</div>
-    ${row('Primary Weapons', primary)}
-    ${row('Sidearm', sidearm)}
-    ${row('Explosive', explosive)}
-    ${row('Armor / Boosters', armor)}
-    ${row('Stratagems', strats)}
-  </article>`;
-}
-
-function copyText(){
-  const f=factionSel.value, d=difficultySel.value, o=objectiveSel.value;
-  const row=findRow(f,d,o);
-  if(!row) return;
-
-  let out=`${f} | ${d} | ${o}\n${row[keyMap.note]||''}\n\n`;
-
-  for(let i=0;i<6;i++){
-    const prim = filterToWhitelist(pickField(row,keyMap.weapons[i]), WL.primaries,  `Primary (Class ${i+1})`).join(', ') || '-';
-    const sid  = filterToWhitelist(pickField(row,keyMap.sidearms[i]), WL.sidearms,   `Sidearm (Class ${i+1})`).join(', ') || '-';
-    const exp  = filterToWhitelist(pickField(row,keyMap.explosives[i]), WL.explosives, `Explosive (Class ${i+1})`).join(', ') || '-';
-    const arm  = pickField(row,keyMap.armor[i]) || '-';
-    const st   = filterToWhitelist(pickField(row,keyMap.strats[i]), WL.stratagems, `Stratagems (Class ${i+1})`).join(', ') || '-';
-
-    out += `• ${pickField(row,keyMap.class[i])}
-   - Primary: ${prim}
-   - Sidearm: ${sid}
-   - Explosive: ${exp}
-   - Armor/Boosters: ${arm}
-   - Stratagems: ${st}\n\n`;
+  // Build a quick whitelist from items.json so we never render mismatched names
+  function buildWhitelist(items) {
+    const set = new Set();
+    const addCat = (obj) => {
+      if (!obj) return;
+      Object.values(obj).forEach((arr) => {
+        if (Array.isArray(arr)) arr.forEach((n) => set.add(n));
+        else if (arr && typeof arr === "object")
+          Object.values(arr).forEach((inner) => {
+            if (Array.isArray(inner)) inner.forEach((n) => set.add(n));
+          });
+      });
+    };
+    addCat(items.primaries);
+    addCat(items.sidearms);
+    addCat(items.explosives);
+    addCat(items.boosters);
+    addCat(items.armor);
+    addCat(items.stratagems);
+    return set;
   }
-  navigator.clipboard.writeText(out).then(()=>alert('Loadout copied!'));
-}
 
-function escapeHtml(s){ return (s??'').toString().replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-
-/* ---------------- sanitizers for Finder fields ---------------- */
-function splitTokens(text){
-  if(!text) return [];
-  return String(text)
-    .split(/[/,;\n]/g)
-    .map(t=>t.trim())
-    .filter(Boolean);
-}
-function buildSet(arr){ return new Set((arr||[]).map(x=>String(x).trim())); }
-function filterToWhitelist(text, whitelistSet, fieldLabel){
-  const tokens = splitTokens(text);
-  const kept = [];
-  const dropped = [];
-  for(const t of tokens){
-    if(whitelistSet.has(t)) kept.push(t);
-    else dropped.push(t);
+  function sanitizeNames(list, whitelist) {
+    if (!Array.isArray(list)) return [];
+    return list.filter((n) => whitelist.has(n));
   }
-  if(dropped.length){
-    console.warn(`[Finder sanitize] Dropped from ${fieldLabel}:`, dropped, ' | kept:', kept);
-  }
-  return kept;
-}
-let WL = { primaries:new Set(), sidearms:new Set(), explosives:new Set(), stratagems:new Set() };
 
-/* -------------------------------- Tabs -------------------------------- */
-document.addEventListener('click', (e)=>{
-  const tab = e.target.closest('.tab');
-  if(!tab) return;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-  tab.classList.add('active');
-  const t=tab.dataset.tab;
-  document.querySelector('#challenge').classList.toggle('hidden', t!=='challenge');
-  document.querySelector('.controls').classList.toggle('hidden', t!=='finder');
-  document.querySelector('.note').classList.toggle('hidden', t!=='finder');
-  document.querySelector('#results').classList.toggle('hidden', t!=='finder');
-});
-
-/* ------------------------------- Challenge ------------------------------ */
-function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function pickOrdered(pool, altCount=2){
-  const s = [...pool].sort(()=>Math.random() - 0.5);
-  return { main: s[0] || '', alts: s.slice(1, 1 + altCount) };
-}
-function genPlayerBuild(){
-  const primary   = pickOrdered(ITEMS.primaries, 2);
-  const sidearm   = pickOrdered(ITEMS.sidearms, 2);
-  const explosive = pickOrdered(ITEMS.explosives, 2);
-  const armor     = rand(ITEMS.armor_weights);
-  const booster   = pickOrdered(ITEMS.boosters, 2); // boosters instead of perks
-
-  const allStrats = [
-    ...(ITEMS.stratagems?.turrets || []),
-    ...(ITEMS.stratagems?.bombardment || []),
-    ...(ITEMS.stratagems?.deployables || [])
-  ].sort(() => Math.random() - 0.5);
-
-  const stratMain = allStrats.slice(0, 4);
-  const stratAlt  = allStrats.slice(4, 6); // 2 alternates
-
-  return { primary, sidearm, explosive, armor, booster, stratMain, stratAlt };
-}
-function orderedBlock(title, picks){
-  const main = escapeHtml((picks.main||'').toString());
-  const alts = (picks.alts||[]).map(x=>escapeHtml(x));
-  const label = alts.length === 1 ? 'Alternate' : 'Alternates';
-  return `<div class="kv"><b>${title}</b>
-    <div>${main}</div>
-    <div class="small"><b>${label}:</b><br>${alts.join('<br>') || '-'}</div>
-  </div>`;
-}
-function challengeCard(idx,b){
-  const altLabel = (arr) => (arr && arr.length === 1) ? 'Alternate' : 'Alternates';
-  return `<article class="card">
-    <div class="role">Player ${idx}</div>
-    ${orderedBlock('Primary', b.primary)}
-    ${orderedBlock('Sidearm', b.sidearm)}
-    ${orderedBlock('Explosive', b.explosive)}
-    <div class="kv"><b>Armor Weight</b><div>${escapeHtml(b.armor)}</div></div>
-    ${orderedBlock('Booster', b.booster)}
-    <div class="kv"><b>Stratagems (4 required)</b>
-      <div>${escapeHtml((b.stratMain || []).join('\n')).replace(/\n/g,'<br>')}</div>
-      <div class="small"><b>${altLabel(b.stratAlt || [])}:</b><br>
-        ${escapeHtml((b.stratAlt || []).join('\n')).replace(/\n/g,'<br>') || '-'}</div>
-    </div>
-  </article>`;
-}
-
-document.addEventListener('click', (e)=>{
-  if(e.target && e.target.id==='rollBtn'){
-    if(!itemsReady){
-      showError('Items are still loading. Please wait a second and try again.');
-      return;
+  function ensureMustIncludeStratagems(strats, whitelist) {
+    const out = [...strats];
+    for (const req of MUST_INCLUDE_STRATAGEMS) {
+      // allow loose matches (e.g., "Orbital Napalm" vs "Orbital Napalm Strike")
+      const has = out.some((s) => s.toLowerCase().includes(req.toLowerCase().replace(/ strike| exosuit/g, "").trim()));
+      if (!has) {
+        // add if whitelist has an exact looking candidate
+        const found = [...whitelist].find((w) =>
+          w.toLowerCase().includes(req.toLowerCase().replace(/ strike| exosuit/g, "").trim())
+        );
+        if (found) out.push(found);
+      }
     }
-    try{ renderChallenge(); }
-    catch(err){ showError(err.message || String(err)); }
+    return uniq(out);
   }
-});
-function renderChallenge(){
-  const n = parseInt($("#players").value,10);
-  let fSel = $("#challengeFaction").value;
-  let dSel = $("#challengeDifficulty").value;
-  if(fSel==='Random'){ fSel = rand(ITEMS.factions); }
-  if(dSel==='Random'){ dSel = rand(ITEMS.difficulties); }
-  $("#challengeHeader").textContent = `${escapeHtml(fSel)} • ${escapeHtml(dSel)}`;
-  const out = [];
-  for(let p=1;p<=n;p++){ out.push(challengeCard(p, genPlayerBuild())); }
-  $("#challengeResults").innerHTML = out.join('');
-}
 
-(function initCounter(){
-  const NAMESPACE = 'mouthbreathertv-helldivers2';
-  const KEY = 'site-visits';
-  const ENDPOINT = 'https://api.countapi.xyz';
-  const el = document.getElementById('visitCount');
-  if (!el) return;
+  // Build normalized usage weights (name -> 0..1)
+  function buildUsageWeights(usageJson) {
+    const counts = new Map(); // name -> count/score
+    const bump = (name, v) => counts.set(name, (counts.get(name) || 0) + (v || 1));
 
-  const set = v => el.textContent = new Intl.NumberFormat().format(v ?? 0);
+    // We try to be schema-flexible:
+    // Accept arrays of {name, count|uses|usage_rate}, or nested categories.
+    const traverse = (node) => {
+      if (!node) return;
+      if (Array.isArray(node)) {
+        node.forEach((e) => {
+          if (e && typeof e === "object") {
+            if (e.name) {
+              const v = Number(e.count ?? e.uses ?? e.usage ?? e.usage_rate ?? 1);
+              bump(e.name, isFinite(v) ? Math.max(1, v) : 1);
+            } else {
+              traverse(e);
+            }
+          }
+        });
+      } else if (typeof node === "object") {
+        Object.values(node).forEach(traverse);
+      }
+    };
 
-  async function ensure() {
-  try {
-    // try get first
-    const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-    if (g.ok) {
-      const d = await g.json();
-      return d.value;
+    traverse(usageJson);
+
+    // Normalize 0..1
+    let max = 0;
+    for (const v of counts.values()) max = Math.max(max, v);
+    const weights = {};
+    for (const [k, v] of counts.entries()) {
+      weights[k] = max > 0 ? v / max : 0;
     }
-    // if missing, create it at 0
-    const c = await fetch(`${ENDPOINT}/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}&value=0`);
-    if (c.ok) {
-      const d = await c.json();
-      return d.value;
-    }
-  } catch (_) {}
-  return 0;
-}
+    return weights;
+  }
 
-  (async () => {
-    const _ = await ensure();
+  // Rank a list of candidate names by usage weight + an optional base bias
+  function rankByUsage(candidates, weights, baseBias = 0.1) {
+    return [...candidates]
+      .map((n) => ({ n, w: (weights[n] || 0) + baseBias }))
+      .sort((a, b) => b.w - a.w)
+      .map((x) => x.n);
+  }
+
+  // Pick a grenade respectful of faction if requested
+  function pickGrenadeForFaction(faction, availableExplosives, enforceFaction) {
+    if (!enforceFaction) return availableExplosives[0] || null;
+    const hints = GRENADE_HINTS[faction] || [];
+    for (const h of hints) {
+      const found = availableExplosives.find((g) => g.toLowerCase().includes(h.toLowerCase()));
+      if (found) return found;
+    }
+    return availableExplosives[0] || null;
+  }
+
+  // Enforce ≤ 2 duplicate boosters in the squad by swapping to next-ranked
+  function enforceBoosterRule(squad, rankedBoosters) {
+    const counts = new Map();
+    const maxDup = 2;
+
+    for (const member of squad) {
+      const b = member.booster;
+      if (!b) continue;
+      counts.set(b, (counts.get(b) || 0) + 1);
+      if (counts.get(b) > maxDup) {
+        // swap to next
+        const currentIdx = rankedBoosters.indexOf(b);
+        let swapped = false;
+        for (let i = currentIdx + 1; i < rankedBoosters.length; i++) {
+          const alt = rankedBoosters[i];
+          if ((counts.get(alt) || 0) < maxDup) {
+            member.booster = alt;
+            counts.set(alt, (counts.get(alt) || 0) + 1);
+            swapped = true;
+            break;
+          }
+        }
+        if (!swapped) {
+          // last-ditch: pick any not yet used >2
+          const any = rankedBoosters.find((x) => (counts.get(x) || 0) < maxDup);
+          if (any) {
+            member.booster = any;
+            counts.set(any, (counts.get(any) || 0) + 1);
+          }
+        }
+      }
+    }
+  }
+
+  // Simple synergy nudges: return bias per role tags
+  function synergyBiases(synergyMode) {
+    switch (synergyMode) {
+      case "anti-armor":
+        return { antiArmor: 0.25, control: 0.05, sustain: 0.05, recon: 0.05 };
+      case "control":
+        return { control: 0.25, sustain: 0.05 };
+      case "sustain":
+        return { sustain: 0.25, control: 0.05 };
+      case "recon":
+        return { recon: 0.25, control: 0.05 };
+      default:
+        return { };
+    }
+  }
+
+  // Blend curated role picks with usage weights (+synergy bias)
+  function pickForRole({ roleId, curatedRole, items, weights, faction, difficulty, synergyMode, whitelist, enforceFactionGrenades }) {
+    // Gather candidates from curated (role block) & expand with entire category (to remain exhaustive)
+    const roleBlock = curatedRole || {};
+    const primaries = uniq([
+      ...(roleBlock.primaries || []),
+      ...((items.primaries && items.primaries.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    const sidearms = uniq([
+      ...(roleBlock.sidearms || []),
+      ...((items.sidearms && items.sidearms.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    const explosives = uniq([
+      ...(roleBlock.grenades || []),
+      ...((items.explosives && items.explosives.grenades) || []),
+      ...((items.explosives && items.explosives.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    // Stratagems: consolidate categories, ensure must-include
+    let stratCandidates = uniq([
+      ...((roleBlock.stratagems || [])),
+      ...((items.stratagems && items.stratagems.turrets) || []),
+      ...((items.stratagems && items.stratagems.bombardments) || []),
+      ...((items.stratagems && items.stratagems.deployables) || []),
+      ...((items.stratagems && items.stratagems.backpacks) || []),
+      ...((items.stratagems && items.stratagems.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    stratCandidates = ensureMustIncludeStratagems(stratCandidates, whitelist);
+
+    const boosters = uniq([
+      ...(roleBlock.boosters || []),
+      ...((items.boosters && items.boosters.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    const armor = uniq([
+      ...(roleBlock.armor || []),
+      ...((items.armor && items.armor.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    // Synergy biases: very light nudge by category tags we "pretend" exist in curated role metadata
+    // For simplicity, apply small additive bias if roleId implies a tag:
+    const bias = synergyBiases(synergyMode);
+    const baseBias = 0.10;
+    const roleBias =
+      roleId === "heavy" ? (bias.antiArmor || 0) :
+      roleId === "demo" ? (bias.antiArmor || 0.05) :
+      roleId === "support" ? (bias.sustain || 0.05) :
+      roleId === "medic" ? (bias.sustain || 0.10) :
+      roleId === "recon" ? (bias.recon || 0.10) :
+      roleId === "assault" ? (bias.control || 0.05) : 0;
+
+    // Rank lists by usage
+    const rankedPrimaries = rankByUsage(primaries, weights, baseBias + roleBias);
+    const rankedSidearms = rankByUsage(sidearms, weights, baseBias);
+    const rankedStrats = rankByUsage(stratCandidates, weights, baseBias + (bias.control || 0));
+    const rankedBoosters = rankByUsage(boosters, weights, baseBias + (bias.sustain || 0));
+    const rankedArmor = rankByUsage(armor, weights, baseBias);
+    const rankedGrenades = rankByUsage(explosives, weights, baseBias + (bias.control || 0.02));
+
+    // Pick top choices
+    const primary = rankedPrimaries[0] || null;
+    const sidearm = rankedSidearms[0] || null;
+    const booster = rankedBoosters[0] || null;
+    const armorPick = rankedArmor[0] || null;
+
+    // Choose 3-4 stratagems per role with diversity (turret/bombard/deployable/backpack if possible)
+    const chosenStrats = rankedStrats.slice(0, 4);
+
+    // Grenade with faction logic
+    const grenade = pickGrenadeForFaction(faction, rankedGrenades, enforceFactionGrenades);
+
+    return {
+      roleId,
+      primary,
+      sidearm,
+      grenade,
+      booster,
+      armor: armorPick,
+      stratagems: chosenStrats,
+    };
+  }
+
+  // Build a squad for Finder (deterministic-ish with current selectors)
+  function buildFinderSquad({ faction, difficulty, synergyMode, objective, curated, items, weights, whitelist, enforceFactionGrenades }) {
+    // Identify curated role blocks under curated[faction][difficulty][objective]
+    let roleBlocks = {};
     try {
-      const h = await fetch(`${ENDPOINT}/hit/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-      if (h.ok) { const d = await h.json(); set(d.value); return; }
-    } catch (_) {}
-    // fallback to get if hit failed (adblock, etc.)
-    try {
-      const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-      if (g.ok) { const d = await g.json(); set(d.value); return; }
-    } catch (_) {}
-    set(0);
-  })();
-})();
+      roleBlocks = (((curated[faction] || {})[difficulty] || {})[objective] || {}).roles || {};
+    } catch (e) { roleBlocks = {}; }
 
-function buildWhitelistFromItems(){
-  WL.primaries  = buildSet(ITEMS.primaries);
-  WL.sidearms   = buildSet(ITEMS.sidearms);
-  WL.explosives = buildSet(ITEMS.explosives);
-  WL.stratagems = buildSet([
-    ...(ITEMS.stratagems?.turrets || []),
-    ...(ITEMS.stratagems?.bombardment || []),
-    ...(ITEMS.stratagems?.deployables || []),
-  ]);
-  itemsReady = true;
-}
+    const squad = DEFAULTS.roles.map((r) =>
+      pickForRole({
+        roleId: r.id,
+        curatedRole: roleBlocks[r.id],
+        items,
+        weights,
+        faction,
+        difficulty,
+        synergyMode,
+        whitelist,
+        enforceFactionGrenades,
+      })
+    );
 
-(function initHitsCounter(){
-  function start(){
-    const ID = 'mouthbreathertv-helldivers2'; // unique ID for your site
-    const el = document.getElementById('visitCount');
-    if (!el) return;
+    // Enforce booster rule across the squad
+    const allBoostersRanked = rankByUsage((items.boosters && items.boosters.all) || [], weights, 0.1);
+    enforceBoosterRule(squad, allBoostersRanked);
 
-    const set = (n) => el.textContent = new Intl.NumberFormat().format(n ?? 0);
+    return squad;
+  }
 
-    fetch(`https://hits.sh/${encodeURIComponent(ID)}.json?view=1`, {
-      cache: 'no-store',
-      mode: 'cors',
-    })
-    .then(r => r.json())
-    .then(d => set((d && typeof d.hits === 'number') ? d.hits : 0))
-    .catch(err => {
-      console.warn('hits.sh failed:', err);
-      set(0);
+  // Build a random (but structured) squad for the Challenge tab
+  function buildChallengeSquad({ faction, enforceFactionGrenades, items, weights, whitelist }) {
+    const randPick = (arr) => arr[Math.floor(Math.random() * arr.length)] || null;
+
+    const primaries = ((items.primaries && items.primaries.all) || []).filter((n) => whitelist.has(n));
+    const sidearms = ((items.sidearms && items.sidearms.all) || []).filter((n) => whitelist.has(n));
+    const grenades = ((items.explosives && items.explosives.all) || []).filter((n) => whitelist.has(n));
+    const boosters = ((items.boosters && items.boosters.all) || []).filter((n) => whitelist.has(n));
+    const armor = ((items.armor && items.armor.all) || []).filter((n) => whitelist.has(n));
+    const stratPool = uniq([
+      ...((items.stratagems && items.stratagems.turrets) || []),
+      ...((items.stratagems && items.stratagems.bombardments) || []),
+      ...((items.stratagems && items.stratagems.deployables) || []),
+      ...((items.stratagems && items.stratagems.backpacks) || []),
+      ...((items.stratagems && items.stratagems.all) || []),
+    ]).filter((n) => whitelist.has(n));
+
+    const rankedBoosters = rankByUsage(boosters, weights, 0.1);
+
+    const squad = DEFAULTS.roles.map((r) => {
+      const primary = randPick(primaries);
+      const sidearm = randPick(sidearms);
+      const chosenGrenade = pickGrenadeForFaction(faction, rankByUsage(grenades, weights, 0.05), enforceFactionGrenades);
+
+      const stratagems = uniq([
+        randPick(stratPool),
+        randPick(stratPool),
+        randPick(stratPool),
+        randPick(stratPool),
+      ]).slice(0, 4);
+
+      return {
+        roleId: r.id,
+        primary,
+        sidearm,
+        grenade: chosenGrenade,
+        booster: randPick(rankedBoosters),
+        armor: randPick(armor),
+        stratagems,
+      };
+    });
+
+    enforceBoosterRule(squad, rankedBoosters);
+    return squad;
+  }
+
+  // --------------------------
+  // Rendering
+  // --------------------------
+  function roleLabel(roleId) {
+    const found = DEFAULTS.roles.find((r) => r.id === roleId);
+    return found ? found.name : roleId;
+  }
+
+  function renderSquadCards(container, squad) {
+    if (!container) return;
+    container.innerHTML = "";
+    squad.forEach((m) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const h = document.createElement("h3");
+      h.textContent = roleLabel(m.roleId);
+      card.appendChild(h);
+
+      const row1 = document.createElement("div");
+      row1.className = "row";
+      const badge = (txt) => {
+        const b = document.createElement("span");
+        b.className = "badge";
+        b.textContent = txt;
+        return b;
+      };
+      row1.appendChild(badge("Optimized by Community + Curation"));
+      card.appendChild(row1);
+
+      const kv = (k, v) => {
+        const wrap = document.createElement("div");
+        wrap.className = "kv";
+        const key = document.createElement("div");
+        key.className = "key";
+        key.textContent = k;
+        const val = document.createElement("div");
+        val.className = "val";
+        val.textContent = Array.isArray(v) ? v.join(", ") : (v || "—");
+        wrap.appendChild(key);
+        wrap.appendChild(val);
+        return wrap;
+      };
+
+      card.appendChild(kv("Primary", m.primary));
+      card.appendChild(kv("Sidearm", m.sidearm));
+      card.appendChild(kv("Grenade", m.grenade));
+      card.appendChild(kv("Booster", m.booster));
+      card.appendChild(kv("Armor", m.armor));
+      card.appendChild(kv("Stratagems", m.stratagems));
+
+      container.appendChild(card);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
+  function showSkeletons(container, count = 4) {
+    if (!container) return;
+    container.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement("div");
+      c.className = "card skeleton";
+      container.appendChild(c);
+    }
   }
+
+  // Populate objective select from curated & usage (if present)
+  function populateObjectivesSelect(curated, usage, faction, difficulty, selEl) {
+    const fromCurated = new Set();
+    try {
+      const factionNode = curated[faction] || {};
+      const diffNode = factionNode[difficulty] || {};
+      Object.keys(diffNode).forEach((obj) => fromCurated.add(obj));
+    } catch (e) {}
+
+    const fromUsage = new Set();
+    const scanUsage = (node) => {
+      if (!node) return;
+      if (Array.isArray(node)) node.forEach(scanUsage);
+      else if (typeof node === "object") {
+        if (node.objective && typeof node.objective === "string") {
+          fromUsage.add(node.objective);
+        }
+        Object.values(node).forEach(scanUsage);
+      }
+    };
+    scanUsage(usage);
+
+    const merged = uniq([
+      ...Array.from(fromCurated),
+      ...Array.from(fromUsage),
+      ...DEFAULTS.fallbackObjectives,
+    ]);
+
+    selEl.innerHTML = "";
+    merged.forEach((o) => {
+      const opt = document.createElement("option");
+      opt.textContent = o;
+      selEl.appendChild(opt);
+    });
+
+    // Ensure a stable default selection
+    const desired = merged.find((x) => x.toLowerCase().includes("nest")) || merged[0];
+    selEl.value = desired || merged[0] || DEFAULTS.objective;
+  }
+
+  // --------------------------
+  // Tabs & Controls
+  // --------------------------
+  function initTabs() {
+    el.tabs = Array.from(document.querySelectorAll(".tab"));
+    el.panels = Array.from(document.querySelectorAll(".panel"));
+
+    el.tabs.forEach((t) => {
+      t.addEventListener("click", () => {
+        el.tabs.forEach((x) => x.classList.remove("active"));
+        el.panels.forEach((p) => p.classList.remove("active"));
+        t.classList.add("active");
+        const id = t.dataset.tab;
+        document.getElementById(id).classList.add("active");
+      });
+    });
+  }
+
+  function bindControls() {
+    el.faction = document.getElementById("faction");
+    el.difficulty = document.getElementById("difficulty");
+    el.objective = document.getElementById("objective");
+    el.synergy = document.getElementById("team-synergy");
+    el.reroll = document.getElementById("reroll");
+    el.finderGrid = document.getElementById("finder-squad");
+    el.challengeGrid = document.getElementById("challenge-squad");
+    el.randomizeChallenge = document.getElementById("randomize-challenge");
+    el.enforceBoosters = document.getElementById("enforce-boosters");
+    el.factionGrenades = document.getElementById("faction-grenades");
+    el.visitorCount = document.getElementById("visitor-count");
+
+    // defaults on first load
+    el.faction.value = DEFAULTS.faction;
+    el.difficulty.value = DEFAULTS.difficulty;
+    el.synergy.value = "balanced";
+
+    const onChangeFinder = () => {
+      if (!STATE.isReady) return;
+      showSkeletons(el.finderGrid, 4);
+      // minor debounce to keep UI smooth
+      queueMicrotask(async () => {
+        const whitelist = buildWhitelist(STATE.items);
+        const squad = buildFinderSquad({
+          faction: el.faction.value,
+          difficulty: el.difficulty.value,
+          synergyMode: el.synergy.value,
+          objective: el.objective.value,
+          curated: STATE.curated,
+          items: STATE.items,
+          weights: STATE.usageWeights,
+          whitelist,
+          enforceFactionGrenades: true,
+        });
+        renderSquadCards(el.finderGrid, squad);
+      });
+    };
+
+    el.faction.addEventListener("change", () => {
+      populateObjectivesSelect(STATE.curated, STATE.usage, el.faction.value, el.difficulty.value, el.objective);
+      onChangeFinder();
+    });
+    el.difficulty.addEventListener("change", () => {
+      populateObjectivesSelect(STATE.curated, STATE.usage, el.faction.value, el.difficulty.value, el.objective);
+      onChangeFinder();
+    });
+    el.objective.addEventListener("change", onChangeFinder);
+    el.synergy.addEventListener("change", onChangeFinder);
+    el.reroll.addEventListener("click", onChangeFinder);
+
+    el.randomizeChallenge.addEventListener("click", () => {
+      if (!STATE.isReady) return;
+      showSkeletons(el.challengeGrid, 4);
+      queueMicrotask(() => {
+        const whitelist = buildWhitelist(STATE.items);
+        const squad = buildChallengeSquad({
+          faction: el.faction.value,
+          enforceFactionGrenades: el.factionGrenades.checked,
+          items: STATE.items,
+          weights: STATE.usageWeights,
+          whitelist,
+        });
+        if (el.enforceBoosters.checked) {
+          const ranked = rankByUsage((STATE.items.boosters && STATE.items.boosters.all) || [], STATE.usageWeights, 0.1);
+          enforceBoosterRule(squad, ranked);
+        }
+        renderSquadCards(el.challengeGrid, squad);
+      });
+    });
+  }
+
+  // --------------------------
+  // Data Load & First Render
+  // --------------------------
+  async function loadAll() {
+    // Show skeletons immediately (prevents blank on first paint)
+    showSkeletons(document.getElementById("finder-squad"), 4);
+    showSkeletons(document.getElementById("challenge-squad"), 4);
+
+    // Fetch all JSON in parallel
+    const [curated, items, usage] = await Promise.all([
+      fetchJSON("data.json"),
+      fetchJSON("items.json"),
+      fetchJSON("helldive_live_merged_dataset.json"),
+    ]);
+
+    STATE.curated = curated || {};
+    STATE.items = items || {};
+    STATE.usage = usage || {};
+    STATE.usageWeights = buildUsageWeights(STATE.usage);
+    STATE.isReady = true;
+
+    // Populate objective select & render default squads
+    populateObjectivesSelect(STATE.curated, STATE.usage, el.faction.value, el.difficulty.value, el.objective);
+
+    const whitelist = buildWhitelist(STATE.items);
+
+    const finderSquad = buildFinderSquad({
+      faction: el.faction.value,
+      difficulty: el.difficulty.value,
+      synergyMode: el.synergy.value,
+      objective: el.objective.value,
+      curated: STATE.curated,
+      items: STATE.items,
+      weights: STATE.usageWeights,
+      whitelist,
+      enforceFactionGrenades: true,
+    });
+    renderSquadCards(el.finderGrid, finderSquad);
+
+    const challengeSquad = buildChallengeSquad({
+      faction: el.faction.value,
+      enforceFactionGrenades: el.factionGrenades.checked,
+      items: STATE.items,
+      weights: STATE.usageWeights,
+      whitelist,
+    });
+    if (el.enforceBoosters.checked) {
+      const ranked = rankByUsage((STATE.items.boosters && STATE.items.boosters.all) || [], STATE.usageWeights, 0.1);
+      enforceBoosterRule(challengeSquad, ranked);
+    }
+    renderSquadCards(el.challengeGrid, challengeSquad);
+  }
+
+  // --------------------------
+  // Visitor Counter (hits.sh)
+  // --------------------------
+  (function initVisitorCounter() {
+    const elNum = document.getElementById("visitor-count");
+    if (!elNum) return;
+
+    // IMPORTANT: Set this to your public host+path (no trailing slash).
+    // Example: 'woodshedtv.github.io/helldivers2-loadouts' or 'mouthbreathertv.com/helldivers'
+    const PROD_SLUG = "mouthbreathertv.com/helldivers"; // <-- update me to your deployed URL
+
+    // For real HTTP(S) pages, use the actual path; for file:// fallback to PROD_SLUG
+    const isHttp = location.protocol.startsWith("http");
+    const runtimeSlug = isHttp
+      ? (location.hostname + location.pathname).replace(/\/$/, "")
+      : PROD_SLUG;
+
+    const LS_KEY = "visitorCountCache:" + runtimeSlug;
+    const cached = localStorage.getItem(LS_KEY);
+    if (cached && /^\d+$/.test(cached)) elNum.textContent = cached;
+
+    function ping() {
+      const img = new Image();
+      img.referrerPolicy = "no-referrer-when-downgrade";
+      img.src = `https://hits.sh/${encodeURIComponent(runtimeSlug)}.svg?view=total&_=${Date.now()}`;
+    }
+
+    function applyCountFromSvg(svgText) {
+      const matches = svgText.match(/>(\d[\d,]*)<\/text>/g);
+      if (!matches) throw new Error("No numeric <text> in hits SVG");
+      const last = matches[matches.length - 1].replace(/[^\d]/g, "");
+      if (/^\d+$/.test(last)) {
+        elNum.textContent = last;
+        localStorage.setItem(LS_KEY, last);
+      }
+    }
+
+    function fetchCount(tryNum = 0) {
+      fetch(`https://hits.sh/${encodeURIComponent(runtimeSlug)}.svg?view=total&_=${Date.now()}`, {
+        cache: "no-store",
+      })
+        .then((r) => r.text())
+        .then(applyCountFromSvg)
+        .catch(() => {
+          if (tryNum < 3) setTimeout(() => fetchCount(tryNum + 1), 250 * (tryNum + 1));
+        });
+    }
+
+    ping();
+    setTimeout(() => fetchCount(0), 300);
+  })();
+
+  // --------------------------
+  // Boot
+  // --------------------------
+  document.addEventListener("DOMContentLoaded", async () => {
+    initTabs();
+    bindControls();
+    try {
+      await loadAll();
+    } catch (err) {
+      console.error(err);
+      // Show a friendly error state in cards
+      const showErr = (container) => {
+        if (!container) return;
+        container.innerHTML = "";
+        const c = document.createElement("div");
+        c.className = "card";
+        const p = document.createElement("p");
+        p.textContent = "Failed to load data. Please refresh.";
+        c.appendChild(p);
+        container.appendChild(c);
+      };
+      showErr(document.getElementById("finder-squad"));
+      showErr(document.getElementById("challenge-squad"));
+    }
+  });
 })();
-
-
-load();
