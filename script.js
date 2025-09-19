@@ -328,16 +328,22 @@ function renderChallenge(){
   const set = v => el.textContent = new Intl.NumberFormat().format(v ?? 0);
 
   async function ensure() {
-    try {
-      // try get first
-      const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
-      if (g.ok) { const d = await g.json(); return d.value; }
-      // if missing, create it at 0
-      const c = await fetch(`${ENDPOINT}/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}&value=0`);
-      if (c.ok) { const d = await c.json(); return d.value; }
-    } catch (_) {}
-    return 0;
-  }
+  try {
+    // try get first
+    const g = await fetch(`${ENDPOINT}/get/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY)}`);
+    if (g.ok) {
+      const d = await g.json();
+      return d.value;
+    }
+    // if missing, create it at 0
+    const c = await fetch(`${ENDPOINT}/create?namespace=${encodeURIComponent(NAMESPACE)}&key=${encodeURIComponent(KEY)}&value=0`);
+    if (c.ok) {
+      const d = await c.json();
+      return d.value;
+    }
+  } catch (_) {}
+  return 0;
+}
 
   (async () => {
     const _ = await ensure();
